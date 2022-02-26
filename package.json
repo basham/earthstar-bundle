@@ -1,0 +1,6 @@
+{
+  "name": "earthstar-bundle",
+  "version": "7.1.0",
+  "description": "Browser bundle for Earthstar",
+  "main": "earthstar.bundle.v7.1.0.js"
+}
