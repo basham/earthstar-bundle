@@ -31,5 +31,5 @@ import * as Earthstar from 'earthstar'
 1. Update the Earthstar version in `Makefile` and `package.json`.
 2. Make the bundle (`make bundle`).
 3. Commit.
-4. Tag the commit.
-5. Push to GitHub.
+4. Tag the commit (`git tag v#.#.#`).
+5. Push to GitHub (`git push --tags`).
