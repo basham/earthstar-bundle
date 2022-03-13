@@ -20,6 +20,12 @@ class ReplicaIsClosedError extends EarthstarError {
         this.name = "ReplicaIsClosedError";
     }
 }
+class ReplicaCacheIsClosedError extends EarthstarError {
+    constructor(message){
+        super(message || "a ReplicaCache was used after being closed");
+        this.name = "ReplicaCacheIsClosedError";
+    }
+}
 class QueryFollowerIsClosedError extends EarthstarError {
     constructor(message){
         super(message || "a QueryFollower was used after being closed");
@@ -56,15 +62,16 @@ class NotImplementedError extends EarthstarError {
         this.name = "NotImplementedError";
     }
 }
-function isErr(x1) {
-    return x1 instanceof EarthstarError;
+function isErr(x2) {
+    return x2 instanceof EarthstarError;
 }
-function notErr(x2) {
-    return !(x2 instanceof EarthstarError);
+function notErr(x3) {
+    return !(x3 instanceof EarthstarError);
 }
 export { EarthstarError as EarthstarError };
 export { ValidationError as ValidationError };
 export { ReplicaIsClosedError as ReplicaIsClosedError };
+export { ReplicaCacheIsClosedError as ReplicaCacheIsClosedError };
 export { QueryFollowerIsClosedError as QueryFollowerIsClosedError };
 export { NotFoundError as NotFoundError };
 export { NetworkError as NetworkError };
@@ -413,22 +420,22 @@ var n = Object.defineProperty;
 var j = Object.getOwnPropertyDescriptor;
 var a = Object.getOwnPropertyNames;
 var v = Object.getPrototypeOf, y = Object.prototype.hasOwnProperty;
-var g = (t)=>n(t, "__esModule", {
+var d = (t)=>n(t, "__esModule", {
         value: !0
     })
 ;
-var m = (t, r)=>()=>(r || t((r = {
+var g = (t, r)=>()=>(r || t((r = {
             exports: {}
         }).exports, r), r.exports)
 ;
-var S = (t, r, e, o1)=>{
+var m = (t, r, e, o1)=>{
     if (r && typeof r == "object" || typeof r == "function") for (let f of a(r))!y.call(t, f) && (e || f !== "default") && n(t, f, {
         get: ()=>r[f]
         ,
         enumerable: !(o1 = j(r, f)) || o1.enumerable
     });
     return t;
-}, l = (t, r)=>S(g(n(t != null ? O(v(t)) : {}, "default", !r && t && t.__esModule ? {
+}, l = (t, r)=>m(d(n(t != null ? O(v(t)) : {}, "default", !r && t && t.__esModule ? {
         get: ()=>t.default
         ,
         enumerable: !0
@@ -437,7 +444,7 @@ var S = (t, r, e, o1)=>{
         enumerable: !0
     })), t)
 ;
-var s = m((d, p)=>{
+var s = g((q, p)=>{
     "use strict";
     p.exports = function t(r, e) {
         if (r === e) return !0;
@@ -463,7 +470,34 @@ var s = m((d, p)=>{
         return r !== r && e !== e;
     };
 });
-var i = l(s()), _ = l(s()), A = i.default || _;
+var i = l(s()), S = l(s()), { default: $ , ...x } = S, w = (i.default ?? $) ?? x;
+const cloneDeep = (value)=>{
+    const typeofValue = typeof value;
+    if ([
+        "string",
+        "number",
+        "boolean",
+        "string",
+        "bigint",
+        "symbol",
+        "null",
+        "undefined",
+        "function", 
+    ].includes(typeofValue)) {
+        return value;
+    }
+    if (Array.isArray(value)) {
+        return value.map(cloneDeep);
+    }
+    if (typeofValue === "object") {
+        const clone = {};
+        for(let prop in value){
+            clone[prop] = cloneDeep(value[prop]);
+        }
+        return clone;
+    }
+    throw new Error(`You've tried to clone something that can't be cloned`);
+};
 var J = Object.create;
 var s1 = Object.defineProperty;
 var N = Object.getOwnPropertyDescriptor;
@@ -473,18 +507,18 @@ var j1 = (i1)=>s1(i1, "__esModule", {
         value: !0
     })
 ;
-var x = (i2, r)=>()=>(r || i2((r = {
+var x1 = (i2, r)=>()=>(r || i2((r = {
             exports: {}
         }).exports, r), r.exports)
 ;
-var _1 = (i3, r, a2, n1)=>{
+var _ = (i3, r, a2, n1)=>{
     if (r && typeof r == "object" || typeof r == "function") for (let e of S1(r))!h.call(i3, e) && (a2 || e !== "default") && s1(i3, e, {
         get: ()=>r[e]
         ,
         enumerable: !(n1 = N(r, e)) || n1.enumerable
     });
     return i3;
-}, O1 = (i4, r)=>_1(j1(s1(i4 != null ? J(b(i4)) : {}, "default", !r && i4 && i4.__esModule ? {
+}, O1 = (i4, r)=>_(j1(s1(i4 != null ? J(b(i4)) : {}, "default", !r && i4 && i4.__esModule ? {
         get: ()=>i4.default
         ,
         enumerable: !0
@@ -493,7 +527,7 @@ var _1 = (i3, r, a2, n1)=>{
         enumerable: !0
     })), i4)
 ;
-var v1 = x((C, p)=>{
+var v1 = x1((C, p)=>{
     "use strict";
     p.exports = function(i5, r) {
         r || (r = {}), typeof r == "function" && (r = {
@@ -537,12 +571,12 @@ var v1 = x((C, p)=>{
         })(i5);
     };
 });
-var g1 = O1(v1()), $ = O1(v1()), { default: k , ...w } = $, E = (g1.default ?? k) ?? w;
+var g1 = O1(v1()), $1 = O1(v1()), { default: k , ...w1 } = $1, E = (g1.default ?? k) ?? w1;
 var S2 = Object.create;
 var l1 = Object.defineProperty;
 var g2 = Object.getOwnPropertyDescriptor;
 var C = Object.getOwnPropertyNames;
-var I = Object.getPrototypeOf, A1 = Object.prototype.hasOwnProperty;
+var I = Object.getPrototypeOf, A = Object.prototype.hasOwnProperty;
 var B = (e)=>l1(e, "__esModule", {
         value: !0
     })
@@ -552,7 +586,7 @@ var O2 = (e, r)=>()=>(r || e((r = {
         }).exports, r), r.exports)
 ;
 var m1 = (e, r, a4, b5)=>{
-    if (r && typeof r == "object" || typeof r == "function") for (let t of C(r))!A1.call(e, t) && (a4 || t !== "default") && l1(e, t, {
+    if (r && typeof r == "object" || typeof r == "function") for (let t of C(r))!A.call(e, t) && (a4 || t !== "default") && l1(e, t, {
         get: ()=>r[t]
         ,
         enumerable: !(b5 = g2(r, t)) || b5.enumerable
@@ -581,9 +615,9 @@ var U = O2((n3)=>{
         if (!a5.loose && e.length * r.bits & 7) throw new SyntaxError("Invalid padding");
         for(var u = e.length; e[u - 1] === "=";)if (--u, !a5.loose && !((e.length - u) * r.bits & 7)) throw new SyntaxError("Invalid padding");
         for(var h3 = new ((b6 = a5.out) != null ? b6 : Uint8Array)(u * r.bits / 8 | 0), s4 = 0, i6 = 0, c = 0, f = 0; f < u; ++f){
-            var x3 = r.codes[e[f]];
-            if (x3 === void 0) throw new SyntaxError("Invalid character " + e[f]);
-            i6 = i6 << r.bits | x3, s4 += r.bits, s4 >= 8 && (s4 -= 8, h3[c++] = 255 & i6 >> s4);
+            var x4 = r.codes[e[f]];
+            if (x4 === void 0) throw new SyntaxError("Invalid character " + e[f]);
+            i6 = i6 << r.bits | x4, s4 += r.bits, s4 >= 8 && (s4 -= 8, h3[c++] = 255 & i6 >> s4);
         }
         if (s4 >= r.bits || 255 & i6 << 8 - s4) throw new SyntaxError("Unexpected end of data");
         return h3;
@@ -594,27 +628,27 @@ var U = O2((n3)=>{
         if (i7 && (s5 += r.chars[h4 & c << r.bits - i7]), u) for(; s5.length * r.bits & 7;)s5 += "=";
         return s5;
     }
-    var d = {
+    var d1 = {
         chars: "0123456789ABCDEF",
         bits: 4
     }, y4 = {
         chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567",
         bits: 5
-    }, w1 = {
+    }, w2 = {
         chars: "0123456789ABCDEFGHIJKLMNOPQRSTUV",
         bits: 5
     }, E2 = {
         chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
         bits: 6
-    }, $1 = {
+    }, $2 = {
         chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_",
         bits: 6
     }, F = {
         parse: function(r, a7) {
-            return v3(r.toUpperCase(), d, a7);
+            return v3(r.toUpperCase(), d1, a7);
         },
         stringify: function(r, a8) {
-            return p(r, d, a8);
+            return p(r, d1, a8);
         }
     }, H1 = {
         parse: function(r, a9) {
@@ -625,10 +659,10 @@ var U = O2((n3)=>{
         }
     }, L1 = {
         parse: function(r, a11) {
-            return v3(r, w1, a11);
+            return v3(r, w2, a11);
         },
         stringify: function(r, a12) {
-            return p(r, w1, a12);
+            return p(r, w2, a12);
         }
     }, M1 = {
         parse: function(r, a13) {
@@ -639,10 +673,10 @@ var U = O2((n3)=>{
         }
     }, P = {
         parse: function(r, a15) {
-            return v3(r, $1, a15);
+            return v3(r, $2, a15);
         },
         stringify: function(r, a16) {
-            return p(r, $1, a16);
+            return p(r, $2, a16);
         }
     }, j2 = {
         parse: v3,
@@ -674,18 +708,18 @@ var L = (t)=>E1(t, "__esModule", {
         value: !0
     })
 ;
-var I1 = (t, e)=>()=>(e || t((e = {
+var M = (t, e)=>()=>(e || t((e = {
             exports: {}
         }).exports, e), e.exports)
 ;
-var M = (t, e, s6, c)=>{
+var I1 = (t, e, s6, c)=>{
     if (e && typeof e == "object" || typeof e == "function") for (let i8 of T1(e))!G.call(t, i8) && (s6 || i8 !== "default") && E1(t, i8, {
         get: ()=>e[i8]
         ,
         enumerable: !(c = D1(e, i8)) || c.enumerable
     });
     return t;
-}, g3 = (t, e)=>M(L(E1(t != null ? C1(z(t)) : {}, "default", !e && t && t.__esModule ? {
+}, g3 = (t, e)=>I1(L(E1(t != null ? C1(z(t)) : {}, "default", !e && t && t.__esModule ? {
         get: ()=>t.default
         ,
         enumerable: !0
@@ -694,7 +728,7 @@ var M = (t, e, s6, c)=>{
         enumerable: !0
     })), t)
 ;
-var y1 = I1((u)=>{
+var y1 = M((u)=>{
     "use strict";
     Object.defineProperty(u, "__esModule", {
         value: !0
@@ -765,17 +799,17 @@ var y1 = I1((u)=>{
         2756734187 | 0,
         3204031479 | 0,
         3329325298 | 0
-    ], A2 = {
+    ], A1 = {
         sha256: 1
     };
     function P(t) {
-        if (t && !A2[t] && !A2[t.toLowerCase()]) throw new Error("Digest method not supported");
+        if (t && !A1[t] && !A1[t.toLowerCase()]) throw new Error("Digest method not supported");
         return new F;
     }
     u.createHash = P;
     var F = class {
         constructor(){
-            this.A = 1779033703 | 0, this.B = 3144134277 | 0, this.C = 1013904242 | 0, this.D = 2773480762 | 0, this.E = 1359893119 | 0, this.F = 2600822924 | 0, this.G = 528734635 | 0, this.H = 1541459225 | 0, this._size = 0, this._sp = 0, (!w2 || d >= 8000) && (w2 = new ArrayBuffer(8000), d = 0), this._byte = new Uint8Array(w2, d, 80), this._word = new Int32Array(w2, d, 20), d += 80;
+            this.A = 1779033703 | 0, this.B = 3144134277 | 0, this.C = 1013904242 | 0, this.D = 2773480762 | 0, this.E = 1359893119 | 0, this.F = 2600822924 | 0, this.G = 528734635 | 0, this.H = 1541459225 | 0, this._size = 0, this._sp = 0, (!w3 || d2 >= 8000) && (w3 = new ArrayBuffer(8000), d2 = 0), this._byte = new Uint8Array(w3, d2, 80), this._word = new Int32Array(w3, d2, 20), d2 += 80;
         }
         update(e) {
             if (typeof e == "string") return this._utf8(e);
@@ -806,22 +840,22 @@ var y1 = I1((u)=>{
             for(let r = 0; r < i11;){
                 let n7 = this._size % 64, h5 = n7;
                 for(; r < i11 && h5 < 64;){
-                    let x4 = e.charCodeAt(r++) | 0;
-                    x4 < 128 ? s9[h5++] = x4 : x4 < 2048 ? (s9[h5++] = 192 | x4 >>> 6, s9[h5++] = 128 | x4 & 63) : x4 < 55296 || x4 > 57343 ? (s9[h5++] = 224 | x4 >>> 12, s9[h5++] = 128 | x4 >>> 6 & 63, s9[h5++] = 128 | x4 & 63) : f ? (x4 = ((f & 1023) << 10) + (x4 & 1023) + 65536, s9[h5++] = 240 | x4 >>> 18, s9[h5++] = 128 | x4 >>> 12 & 63, s9[h5++] = 128 | x4 >>> 6 & 63, s9[h5++] = 128 | x4 & 63, f = 0) : f = x4;
+                    let x5 = e.charCodeAt(r++) | 0;
+                    x5 < 128 ? s9[h5++] = x5 : x5 < 2048 ? (s9[h5++] = 192 | x5 >>> 6, s9[h5++] = 128 | x5 & 63) : x5 < 55296 || x5 > 57343 ? (s9[h5++] = 224 | x5 >>> 12, s9[h5++] = 128 | x5 >>> 6 & 63, s9[h5++] = 128 | x5 & 63) : f ? (x5 = ((f & 1023) << 10) + (x5 & 1023) + 65536, s9[h5++] = 240 | x5 >>> 18, s9[h5++] = 128 | x5 >>> 12 & 63, s9[h5++] = 128 | x5 >>> 6 & 63, s9[h5++] = 128 | x5 & 63, f = 0) : f = x5;
                 }
                 h5 >= 64 && (this._int32(c), c[0] = c[16]), this._size += h5 - n7;
             }
             return this._sp = f, this;
         }
         _int32(e, s10) {
-            let { A: c , B: i12 , C: f , D: r , E: n8 , F: h6 , G: x5 , H: a17  } = this, o4 = 0;
+            let { A: c , B: i12 , C: f , D: r , E: n8 , F: h6 , G: x6 , H: a17  } = this, o4 = 0;
             for(s10 = s10 | 0; o4 < 16;)l6[o4++] = b8(e[s10++]);
             for(o4 = 16; o4 < 64; o4++)l6[o4] = j3(l6[o4 - 2]) + l6[o4 - 7] + Y(l6[o4 - 15]) + l6[o4 - 16] | 0;
             for(o4 = 0; o4 < 64; o4++){
-                let p = a17 + R1(n8) + $2(n8, h6, x5) + O3[o4] + l6[o4] | 0, m3 = N2(c) + v4(c, i12, f) | 0;
-                a17 = x5, x5 = h6, h6 = n8, n8 = r + p | 0, r = f, f = i12, i12 = c, c = p + m3 | 0;
+                let p = a17 + R1(n8) + $3(n8, h6, x6) + O3[o4] + l6[o4] | 0, m3 = N2(c) + v4(c, i12, f) | 0;
+                a17 = x6, x6 = h6, h6 = n8, n8 = r + p | 0, r = f, f = i12, i12 = c, c = p + m3 | 0;
             }
-            this.A = c + this.A | 0, this.B = i12 + this.B | 0, this.C = f + this.C | 0, this.D = r + this.D | 0, this.E = n8 + this.E | 0, this.F = h6 + this.F | 0, this.G = x5 + this.G | 0, this.H = a17 + this.H | 0;
+            this.A = c + this.A | 0, this.B = i12 + this.B | 0, this.C = f + this.C | 0, this.D = r + this.D | 0, this.E = n8 + this.E | 0, this.F = h6 + this.F | 0, this.G = x6 + this.G | 0, this.H = a17 + this.H | 0;
         }
         digest(e) {
             let { _byte: s11 , _word: c  } = this, i13 = this._size % 64 | 0;
@@ -836,18 +870,18 @@ var y1 = I1((u)=>{
         }
         _hex() {
             let { A: e , B: s12 , C: c , D: i14 , E: f , F: r , G: n10 , H: h7  } = this;
-            return _2(e) + _2(s12) + _2(c) + _2(i14) + _2(f) + _2(r) + _2(n10) + _2(h7);
+            return _1(e) + _1(s12) + _1(c) + _1(i14) + _1(f) + _1(r) + _1(n10) + _1(h7);
         }
         _bin() {
-            let { A: e , B: s13 , C: c , D: i15 , E: f , F: r , G: n11 , H: h8 , _byte: x6 , _word: a18  } = this;
-            return a18[0] = b8(e), a18[1] = b8(s13), a18[2] = b8(c), a18[3] = b8(i15), a18[4] = b8(f), a18[5] = b8(r), a18[6] = b8(n11), a18[7] = b8(h8), x6.slice(0, 32);
+            let { A: e , B: s13 , C: c , D: i15 , E: f , F: r , G: n11 , H: h8 , _byte: x7 , _word: a18  } = this;
+            return a18[0] = b8(e), a18[1] = b8(s13), a18[2] = b8(c), a18[3] = b8(i15), a18[4] = b8(f), a18[5] = b8(r), a18[6] = b8(n11), a18[7] = b8(h8), x7.slice(0, 32);
         }
     };
     u.Hash = F;
-    var l6 = new Int32Array(64), w2, d = 0, _2 = (t)=>(t + 4294967296).toString(16).substr(-8)
+    var l6 = new Int32Array(64), w3, d2 = 0, _1 = (t)=>(t + 4294967296).toString(16).substr(-8)
     , S3 = (t)=>t << 24 & 4278190080 | t << 8 & 16711680 | t >> 8 & 65280 | t >> 24 & 255
     , U1 = (t)=>t
-    , b8 = k4() ? U1 : S3, $2 = (t, e, s14)=>s14 ^ t & (e ^ s14)
+    , b8 = k4() ? U1 : S3, $3 = (t, e, s14)=>s14 ^ t & (e ^ s14)
     , v4 = (t, e, s15)=>t & e | s15 & (t | e)
     , N2 = (t)=>(t >>> 2 | t << 30) ^ (t >>> 13 | t << 19) ^ (t >>> 22 | t << 10)
     , R1 = (t)=>(t >>> 6 | t << 26) ^ (t >>> 11 | t << 21) ^ (t >>> 25 | t << 7)
@@ -860,11 +894,12 @@ var y1 = I1((u)=>{
         ]).buffer)[0] === 254;
     }
 });
-var B1 = g3(y1()), H = g3(y1()), { Hash: Q1 , createHash: V1  } = H, { default: K1 , ...W } = H, X = (B1.default ?? K1) ?? W;
+var B1 = g3(y1()), H = g3(y1()), { __esModule: Q1 , Hash: V1 , createHash: X  } = H, { default: K1 , ...W } = H, Z = (B1.default ?? K1) ?? W;
 const mod1 = {
-    default: X,
-    Hash: Q1,
-    createHash: V1
+    default: Z,
+    Hash: V1,
+    __esModule: Q1,
+    createHash: X
 };
 const log = (...args)=>{};
 const busdebug = "        🚌";
@@ -1020,8 +1055,8 @@ class ExtendedPoint {
     y;
     z;
     t;
-    constructor(x7, y5, z1, t){
-        this.x = x7;
+    constructor(x8, y5, z1, t){
+        this.x = x8;
         this.y = y5;
         this.z = z1;
         this.t = t;
@@ -1054,11 +1089,11 @@ class ExtendedPoint {
         return R1.add(R2);
     }
     static calcElligatorRistrettoMap(r0) {
-        const { d  } = CURVE;
+        const { d: d3  } = CURVE;
         const r = mod2(SQRT_M1 * r0 * r0);
         const Ns = mod2((r + _1n) * ONE_MINUS_D_SQ);
         let c = BigInt(-1);
-        const D2 = mod2((c - d * r) * mod2(r + d));
+        const D2 = mod2((c - d3 * r) * mod2(r + d3));
         let { isValid: Ns_D_is_sq , value: s16  } = uvRatio(Ns, D2);
         let s_ = mod2(s16 * r0);
         if (!edIsNegative(s_)) s_ = mod2(-s_);
@@ -1075,7 +1110,7 @@ class ExtendedPoint {
     static fromRistrettoBytes(bytes) {
         bytes = ensureBytes(bytes);
         assertLen(32, bytes);
-        const { a: a19 , d  } = CURVE;
+        const { a: a19 , d: d4  } = CURVE;
         const emsg = "ExtendedPoint.fromRistrettoBytes: Cannot convert bytes to Ristretto Point";
         const s17 = bytes255ToNumberLE(bytes);
         if (!equalBytes(numberToBytesLEPadded(s17, 32), bytes) || edIsNegative(s17)) {
@@ -1086,21 +1121,21 @@ class ExtendedPoint {
         const u2 = mod2(_1n - a19 * s2);
         const u1_2 = mod2(u1 * u1);
         const u2_2 = mod2(u2 * u2);
-        const v5 = mod2(a19 * d * u1_2 - u2_2);
+        const v5 = mod2(a19 * d4 * u1_2 - u2_2);
         const { isValid , value: I2  } = invertSqrt(mod2(v5 * u2_2));
         const Dx = mod2(I2 * u2);
         const Dy = mod2(I2 * Dx * v5);
-        let x8 = mod2((s17 + s17) * Dx);
-        if (edIsNegative(x8)) x8 = mod2(-x8);
+        let x9 = mod2((s17 + s17) * Dx);
+        if (edIsNegative(x9)) x9 = mod2(-x9);
         const y6 = mod2(u1 * Dy);
-        const t = mod2(x8 * y6);
+        const t = mod2(x9 * y6);
         if (!isValid || edIsNegative(t) || y6 === _0n) throw new Error(emsg);
-        return new ExtendedPoint(x8, y6, _1n, t);
+        return new ExtendedPoint(x9, y6, _1n, t);
     }
     toRistrettoBytes() {
-        let { x: x9 , y: y7 , z: z2 , t  } = this;
+        let { x: x10 , y: y7 , z: z2 , t  } = this;
         const u1 = mod2(mod2(z2 + y7) * mod2(z2 - y7));
-        const u2 = mod2(x9 * y7);
+        const u2 = mod2(x10 * y7);
         const { value: invsqrt  } = invertSqrt(mod2(u1 * u2 ** _2n));
         const D11 = mod2(invsqrt * u1);
         const D2 = mod2(invsqrt * u2);
@@ -1108,14 +1143,14 @@ class ExtendedPoint {
         let D3;
         if (edIsNegative(t * zInv)) {
             let _x = mod2(y7 * SQRT_M1);
-            let _y = mod2(x9 * SQRT_M1);
-            x9 = _x;
+            let _y = mod2(x10 * SQRT_M1);
+            x10 = _x;
             y7 = _y;
             D3 = mod2(D11 * INVSQRT_A_MINUS_D);
         } else {
             D3 = D2;
         }
-        if (edIsNegative(x9 * zInv)) y7 = mod2(-y7);
+        if (edIsNegative(x10 * zInv)) y7 = mod2(-y7);
         let s18 = mod2((z2 - y7) * D3);
         if (edIsNegative(s18)) s18 = mod2(-s18);
         return numberToBytesLEPadded(s18, 32);
@@ -1133,11 +1168,11 @@ class ExtendedPoint {
         const Y1 = this.y;
         const Z1 = this.z;
         const { a: a21  } = CURVE;
-        const A3 = mod2(X1 ** _2n);
+        const A2 = mod2(X1 ** _2n);
         const B2 = mod2(Y1 ** _2n);
         const C2 = mod2(_2n * Z1 ** _2n);
-        const D4 = mod2(a21 * A3);
-        const E3 = mod2((X1 + Y1) ** _2n - A3 - B2);
+        const D4 = mod2(a21 * A2);
+        const E3 = mod2((X1 + Y1) ** _2n - A2 - B2);
         const G1 = mod2(D4 + B2);
         const F = mod2(G1 - C2);
         const H2 = mod2(D4 - B2);
@@ -1156,16 +1191,16 @@ class ExtendedPoint {
         const Y2 = other.y;
         const Z2 = other.z;
         const T2 = other.t;
-        const A4 = mod2((Y1 - X1) * (Y2 + X2));
+        const A3 = mod2((Y1 - X1) * (Y2 + X2));
         const B3 = mod2((Y1 + X1) * (Y2 - X2));
-        const F = mod2(B3 - A4);
+        const F = mod2(B3 - A3);
         if (F === _0n) {
             return this.double();
         }
         const C3 = mod2(Z1 * _2n * T2);
         const D5 = mod2(T11 * _2n * Z2);
         const E4 = mod2(D5 + C3);
-        const G2 = mod2(B3 + A4);
+        const G2 = mod2(B3 + A3);
         const H3 = mod2(D5 - C3);
         const X3 = mod2(E4 * F);
         const Y3 = mod2(G2 * H3);
@@ -1181,10 +1216,10 @@ class ExtendedPoint {
         const P0 = ExtendedPoint.ZERO;
         if (this.equals(P0) || n12 === _1n) return this;
         let p = P0;
-        let d = this;
+        let d5 = this;
         while(n12 > _0n){
-            if (n12 & _1n) p = p.add(d);
-            d = d.double();
+            if (n12 & _1n) p = p.add(d5);
+            d5 = d5.double();
             n12 >>= _1n;
         }
         return p;
@@ -1256,9 +1291,9 @@ class ExtendedPoint {
         return ExtendedPoint.normalizeZ(this.wNAF(n14, affinePoint))[0];
     }
     toAffine(invZ = invert(this.z)) {
-        const x10 = mod2(this.x * invZ);
+        const x11 = mod2(this.x * invZ);
         const y8 = mod2(this.y * invZ);
-        return new Point(x10, y8);
+        return new Point(x11, y8);
     }
 }
 const pointPrecomputes = new WeakMap();
@@ -1268,8 +1303,8 @@ class Point {
     static BASE = new Point(CURVE.Gx, CURVE.Gy);
     static ZERO = new Point(_0n, _1n);
     _WINDOW_SIZE;
-    constructor(x11, y9){
-        this.x = x11;
+    constructor(x12, y9){
+        this.x = x12;
         this.y = y9;
     }
     _setWindowSize(windowSize) {
@@ -1277,7 +1312,7 @@ class Point {
         pointPrecomputes.delete(this);
     }
     static fromHex(hex) {
-        const { d , P  } = CURVE;
+        const { d: d6 , P  } = CURVE;
         const bytes = ensureBytes(hex);
         assertLen(32, bytes);
         const normed = bytes.slice();
@@ -1286,15 +1321,15 @@ class Point {
         if (y10 >= P) throw new Error("Point.fromHex expects hex <= Fp");
         const y2 = mod2(y10 * y10);
         const u = mod2(y2 - _1n);
-        const v6 = mod2(d * y2 + _1n);
-        let { isValid , value: x12  } = uvRatio(u, v6);
+        const v6 = mod2(d6 * y2 + _1n);
+        let { isValid , value: x13  } = uvRatio(u, v6);
         if (!isValid) throw new Error("Point.fromHex: invalid y coordinate");
-        const isXOdd = (x12 & _1n) === _1n;
+        const isXOdd = (x13 & _1n) === _1n;
         const isLastByteOdd = (bytes[31] & 128) !== 0;
         if (isLastByteOdd !== isXOdd) {
-            x12 = mod2(-x12);
+            x13 = mod2(-x13);
         }
-        return new Point(x12, y10);
+        return new Point(x13, y10);
     }
     static async fromPrivateKey(privateKey) {
         return (await calcKeys(privateKey)).P;
@@ -1426,17 +1461,17 @@ function invert(number, modulo = CURVE.P) {
     }
     let a25 = mod2(number, modulo);
     let b11 = modulo;
-    let x13 = _0n, y11 = _1n, u = _1n, v7 = _0n;
+    let x14 = _0n, y11 = _1n, u = _1n, v7 = _0n;
     while(a25 !== _0n){
         const q = b11 / a25;
         const r = b11 % a25;
-        const m4 = x13 - u * q;
+        const m4 = x14 - u * q;
         const n15 = y11 - v7 * q;
-        b11 = a25, a25 = r, x13 = u, y11 = v7, u = m4, v7 = n15;
+        b11 = a25, a25 = r, x14 = u, y11 = v7, u = m4, v7 = n15;
     }
     const gcd = b11;
     if (gcd !== _1n) throw new Error("invert: does not exist");
-    return mod2(x13, modulo);
+    return mod2(x14, modulo);
 }
 function invertBatch(nums, modulo = CURVE.P) {
     const len = nums.length;
@@ -1456,26 +1491,26 @@ function invertBatch(nums, modulo = CURVE.P) {
     }
     return nums;
 }
-function pow2(x14, power) {
+function pow2(x15, power) {
     const { P  } = CURVE;
-    let res = x14;
+    let res = x15;
     while((power--) > _0n){
         res *= res;
         res %= P;
     }
     return res;
 }
-function pow_2_252_3(x15) {
+function pow_2_252_3(x16) {
     const { P  } = CURVE;
     const _5n = BigInt(5);
     const _10n = BigInt(10);
     const _20n = BigInt(20);
     const _40n = BigInt(40);
     const _80n = BigInt(80);
-    const x2 = x15 * x15 % P;
-    const b2 = x2 * x15 % P;
+    const x2 = x16 * x16 % P;
+    const b2 = x2 * x16 % P;
     const b4 = pow2(b2, _2n) * b2 % P;
-    const b5 = pow2(b4, _1n) * x15 % P;
+    const b5 = pow2(b4, _1n) * x16 % P;
     const b10 = pow2(b5, _5n) * b5 % P;
     const b20 = pow2(b10, _10n) * b10 % P;
     const b40 = pow2(b20, _20n) * b20 % P;
@@ -1483,25 +1518,25 @@ function pow_2_252_3(x15) {
     const b160 = pow2(b80, _80n) * b80 % P;
     const b240 = pow2(b160, _80n) * b80 % P;
     const b250 = pow2(b240, _10n) * b10 % P;
-    const pow_p_5_8 = pow2(b250, _2n) * x15 % P;
+    const pow_p_5_8 = pow2(b250, _2n) * x16 % P;
     return pow_p_5_8;
 }
 function uvRatio(u, v8) {
     const v3 = mod2(v8 * v8 * v8);
     const v7 = mod2(v3 * v3 * v8);
-    let x16 = mod2(u * v3 * pow_2_252_3(u * v7));
-    const vx2 = mod2(v8 * x16 * x16);
-    const root1 = x16;
-    const root2 = mod2(x16 * SQRT_M1);
+    let x17 = mod2(u * v3 * pow_2_252_3(u * v7));
+    const vx2 = mod2(v8 * x17 * x17);
+    const root1 = x17;
+    const root2 = mod2(x17 * SQRT_M1);
     const useRoot1 = vx2 === u;
     const useRoot2 = vx2 === mod2(-u);
     const noRoot = vx2 === mod2(-u * SQRT_M1);
-    if (useRoot1) x16 = root1;
-    if (useRoot2 || noRoot) x16 = root2;
-    if (edIsNegative(x16)) x16 = mod2(-x16);
+    if (useRoot1) x17 = root1;
+    if (useRoot2 || noRoot) x17 = root2;
+    if (edIsNegative(x17)) x17 = mod2(-x17);
     return {
         isValid: useRoot1 || useRoot2,
-        value: x16
+        value: x17
     };
 }
 function invertSqrt(number) {
@@ -2633,16 +2668,16 @@ var heap = createCommonjsModule2(function(module, exports) {
     (function() {
         var Heap, defaultCmp, floor, heapify2, heappop, heappush, heappushpop, heapreplace, insort, min, nlargest2, nsmallest2, updateItem2, _siftdown, _siftup;
         floor = Math.floor, min = Math.min;
-        defaultCmp = function(x17, y12) {
-            if (x17 < y12) {
+        defaultCmp = function(x18, y12) {
+            if (x18 < y12) {
                 return -1;
             }
-            if (x17 > y12) {
+            if (x18 > y12) {
                 return 1;
             }
             return 0;
         };
-        insort = function(a26, x18, lo, hi, cmp) {
+        insort = function(a26, x19, lo, hi, cmp) {
             var mid;
             if (lo == null) {
                 lo = 0;
@@ -2658,7 +2693,7 @@ var heap = createCommonjsModule2(function(module, exports) {
             }
             while(lo < hi){
                 mid = floor((lo + hi) / 2);
-                if (cmp(x18, a26[mid]) < 0) {
+                if (cmp(x19, a26[mid]) < 0) {
                     hi = mid;
                 } else {
                     lo = mid + 1;
@@ -2667,7 +2702,7 @@ var heap = createCommonjsModule2(function(module, exports) {
             return [].splice.apply(a26, [
                 lo,
                 lo - lo
-            ].concat(x18)), x18;
+            ].concat(x19)), x19;
         };
         heappush = function(array, item, cmp) {
             if (cmp == null) {
@@ -2844,8 +2879,8 @@ var heap = createCommonjsModule2(function(module, exports) {
                 this.cmp = cmp != null ? cmp : defaultCmp;
                 this.nodes = [];
             }
-            Heap2.prototype.push = function(x19) {
-                return heappush(this.nodes, x19, this.cmp);
+            Heap2.prototype.push = function(x20) {
+                return heappush(this.nodes, x20, this.cmp);
             };
             Heap2.prototype.pop = function() {
                 return heappop(this.nodes, this.cmp);
@@ -2853,20 +2888,20 @@ var heap = createCommonjsModule2(function(module, exports) {
             Heap2.prototype.peek = function() {
                 return this.nodes[0];
             };
-            Heap2.prototype.contains = function(x20) {
-                return this.nodes.indexOf(x20) !== -1;
+            Heap2.prototype.contains = function(x21) {
+                return this.nodes.indexOf(x21) !== -1;
             };
-            Heap2.prototype.replace = function(x21) {
-                return heapreplace(this.nodes, x21, this.cmp);
+            Heap2.prototype.replace = function(x22) {
+                return heapreplace(this.nodes, x22, this.cmp);
             };
-            Heap2.prototype.pushpop = function(x22) {
-                return heappushpop(this.nodes, x22, this.cmp);
+            Heap2.prototype.pushpop = function(x23) {
+                return heappushpop(this.nodes, x23, this.cmp);
             };
             Heap2.prototype.heapify = function() {
                 return heapify2(this.nodes, this.cmp);
             };
-            Heap2.prototype.updateItem = function(x23) {
-                return updateItem2(this.nodes, x23, this.cmp);
+            Heap2.prototype.updateItem = function(x24) {
+                return updateItem2(this.nodes, x24, this.cmp);
             };
             Heap2.prototype.clear = function() {
                 return this.nodes = [];
@@ -2912,8 +2947,8 @@ heap$1.pushpop;
 heap$1.replace;
 heap$1.updateItem;
 var commonjsGlobal2 = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
-function getDefaultExportFromCjs(x24) {
-    return x24 && x24.__esModule && Object.prototype.hasOwnProperty.call(x24, "default") ? x24["default"] : x24;
+function getDefaultExportFromCjs(x25) {
+    return x25 && x25.__esModule && Object.prototype.hasOwnProperty.call(x25, "default") ? x25["default"] : x25;
 }
 function createCommonjsModule3(fn, basedir, module) {
     return module = {
@@ -2980,7 +3015,7 @@ var chan = createCommonjsModule3(function(module, exports) {
         node.prev = null;
     };
     exports.removeLinkedListNode = removeLinkedListNode2;
-    let J5 = (x25)=>JSON.stringify(x25)
+    let J5 = (x26)=>JSON.stringify(x26)
     ;
     let log2 = (msg, val)=>{};
     class ChannelTimeoutError2 extends Error {
@@ -3340,15 +3375,15 @@ var lock = createCommonjsModule3(function(module, exports) {
             let priority = opts === void 0 ? void 0 : opts.priority;
             let bypass = opts === void 0 ? false : opts.bypass === true;
             if (bypass) {
-                let d = (0, deferred.makeDeferred)();
+                let d7 = (0, deferred.makeDeferred)();
                 queueMicrotask(async ()=>{
                     try {
-                        d.resolve(await fnToRun());
+                        d7.resolve(await fnToRun());
                     } catch (err) {
-                        d.reject(err);
+                        d7.reject(err);
                     }
                 });
-                return d.promise;
+                return d7.promise;
             } else {
                 return await this._conveyor.push(fnToRun, priority);
             }
@@ -3750,6 +3785,103 @@ class Connection {
         return deferred2.promise;
     }
 }
+const RECONNECT_TIMEOUT = 2000;
+class TransportWebsocketClient {
+    status = new Watchable('OPEN');
+    deviceId;
+    methods;
+    connections = new WatchableSet();
+    constructor(opts){
+        logTransport('constructor for device', opts.deviceId);
+        this.deviceId = opts.deviceId;
+        this.methods = opts.methods;
+    }
+    get isClosed() {
+        return this.status.value === 'CLOSED';
+    }
+    onClose(cb) {
+        return this.status.onChangeTo('CLOSED', cb);
+    }
+    close() {
+        if (this.isClosed) return;
+        logTransport('closing...');
+        this.status.set('CLOSED');
+        logTransport('...closing connections...');
+        for (const conn of this.connections){
+            conn.close();
+        }
+        logTransport('...closed');
+    }
+    addConnection(url) {
+        logTransport('addConnection to url:', url);
+        let ws;
+        try {
+            ws = new WebSocket(url);
+        } catch (error) {
+            throw new RpcErrorNetworkProblem(error);
+        }
+        ws.onopen = (e)=>{
+            logTransport('>>> ws on open');
+            conn1.status.set('OPEN');
+        };
+        ws.onmessage = async (e)=>{
+            logTransport('>>> ws on message');
+            conn1.status.set('OPEN');
+            let env = JSON.parse(e.data);
+            logTransport(`>>> ws on message: it\'s a ${env.kind}`);
+            logTransport(`>>> ws on message: handling...`);
+            await conn1.handleIncomingEnvelope(env);
+            logTransport(`>>> ws on message: done`);
+        };
+        ws.onerror = (e)=>{
+            logTransport('>>> ws on error 2');
+            conn1.status.set('ERROR');
+            logTransport(`could not connect.  retrying in ${RECONNECT_TIMEOUT} ms...`);
+            const timeout = setTimeout(()=>{
+                logTransport('reconnecting');
+                this.addConnection(url);
+            }, RECONNECT_TIMEOUT);
+            conn1.onClose(()=>{
+                clearTimeout(timeout);
+            });
+        };
+        ws.onclose = (e)=>{
+            logTransport('>>> ws on close.  closing the connection.');
+            conn1.close();
+        };
+        const conn1 = new Connection({
+            description: url,
+            transport: this,
+            deviceId: this.deviceId,
+            methods: this.methods,
+            sendEnvelope: async (conn, env)=>{
+                if (conn.isClosed) throw new RpcErrorUseAfterClose('the connection is closed');
+                logTransport(`connection "${conn.description}" is sending an envelope:`, env);
+                logTransport('waiting for OPEN...');
+                await conn.status.waitUntil('OPEN', 2000);
+                if (ws.readyState === ws.OPEN) {
+                    logTransport('send...');
+                    ws.send(JSON.stringify(env));
+                    logTransport('...done');
+                }
+            }
+        });
+        conn1.onClose(async ()=>{
+            logTransport('>>> connection onClose.  closing the ws.');
+            if (ws.bufferedAmount !== 0) {
+                await sleep(1000);
+            }
+            ws.close();
+            this.connections.delete(conn1);
+        });
+        conn1.status.onChange((oldVal, newVal)=>{
+            logTransport(`connection status changed from ${oldVal} --> ${newVal}`);
+        });
+        this.connections.add(conn1);
+        logTransport('...done adding connection');
+        return conn1;
+    }
+}
 const TIMEOUT = 1000;
 class ScheduledPullState {
     closed = false;
@@ -4016,103 +4148,6 @@ class TransportLocal {
         };
     }
 }
-const RECONNECT_TIMEOUT = 2000;
-class TransportWebsocketClient {
-    status = new Watchable('OPEN');
-    deviceId;
-    methods;
-    connections = new WatchableSet();
-    constructor(opts){
-        logTransport('constructor for device', opts.deviceId);
-        this.deviceId = opts.deviceId;
-        this.methods = opts.methods;
-    }
-    get isClosed() {
-        return this.status.value === 'CLOSED';
-    }
-    onClose(cb) {
-        return this.status.onChangeTo('CLOSED', cb);
-    }
-    close() {
-        if (this.isClosed) return;
-        logTransport('closing...');
-        this.status.set('CLOSED');
-        logTransport('...closing connections...');
-        for (const conn of this.connections){
-            conn.close();
-        }
-        logTransport('...closed');
-    }
-    addConnection(url) {
-        logTransport('addConnection to url:', url);
-        let ws;
-        try {
-            ws = new WebSocket(url);
-        } catch (error) {
-            throw new RpcErrorNetworkProblem(error);
-        }
-        ws.onopen = (e)=>{
-            logTransport('>>> ws on open');
-            conn1.status.set('OPEN');
-        };
-        ws.onmessage = async (e)=>{
-            logTransport('>>> ws on message');
-            conn1.status.set('OPEN');
-            let env = JSON.parse(e.data);
-            logTransport(`>>> ws on message: it\'s a ${env.kind}`);
-            logTransport(`>>> ws on message: handling...`);
-            await conn1.handleIncomingEnvelope(env);
-            logTransport(`>>> ws on message: done`);
-        };
-        ws.onerror = (e)=>{
-            logTransport('>>> ws on error 2');
-            conn1.status.set('ERROR');
-            logTransport(`could not connect.  retrying in ${RECONNECT_TIMEOUT} ms...`);
-            const timeout = setTimeout(()=>{
-                logTransport('reconnecting');
-                this.addConnection(url);
-            }, RECONNECT_TIMEOUT);
-            conn1.onClose(()=>{
-                clearTimeout(timeout);
-            });
-        };
-        ws.onclose = (e)=>{
-            logTransport('>>> ws on close.  closing the connection.');
-            conn1.close();
-        };
-        const conn1 = new Connection({
-            description: url,
-            transport: this,
-            deviceId: this.deviceId,
-            methods: this.methods,
-            sendEnvelope: async (conn, env)=>{
-                if (conn.isClosed) throw new RpcErrorUseAfterClose('the connection is closed');
-                logTransport(`connection "${conn.description}" is sending an envelope:`, env);
-                logTransport('waiting for OPEN...');
-                await conn.status.waitUntil('OPEN', 2000);
-                if (ws.readyState === ws.OPEN) {
-                    logTransport('send...');
-                    ws.send(JSON.stringify(env));
-                    logTransport('...done');
-                }
-            }
-        });
-        conn1.onClose(async ()=>{
-            logTransport('>>> connection onClose.  closing the ws.');
-            if (ws.bufferedAmount !== 0) {
-                await sleep(1000);
-            }
-            ws.close();
-            this.connections.delete(conn1);
-        });
-        conn1.status.onChange((oldVal, newVal)=>{
-            logTransport(`connection status changed from ${oldVal} --> ${newVal}`);
-        });
-        this.connections.add(conn1);
-        logTransport('...done adding connection');
-        return conn1;
-    }
-}
 class Simplebus {
     _cbs;
     _cbsOnce;
@@ -4179,7 +4214,7 @@ class SuperbusMap {
             });
             return "added";
         } else {
-            if (!A(value, oldValue)) {
+            if (!w(value, oldValue)) {
                 await this.bus.sendAndWait("changed" + this._sep + key, {
                     key,
                     value,
@@ -4418,22 +4453,22 @@ function isPlainObject(obj) {
     if (("" + obj.constructor).startsWith("class")) return false;
     return true;
 }
-function checkIsPlainObject(x26) {
-    return isPlainObject(x26) ? null : "expected plain object but got " + x26;
+function checkIsPlainObject(x27) {
+    return isPlainObject(x27) ? null : "expected plain object but got " + x27;
 }
 function checkLiteral(val) {
-    return (x27)=>{
-        if (x27 !== val) return `expected literal value ${JSON.stringify(val)}`;
+    return (x28)=>{
+        if (x28 !== val) return `expected literal value ${JSON.stringify(val)}`;
         return null;
     };
 }
 function checkString(opts = {}) {
-    return (x28)=>{
-        if (opts.optional !== true && x28 === undefined) return "required";
-        if (opts.optional === true && x28 === undefined) return null;
-        let len = stringLengthInBytes(x28);
-        if (typeof x28 !== "string") {
-            return "expected a string but got " + JSON.stringify(x28);
+    return (x29)=>{
+        if (opts.optional !== true && x29 === undefined) return "required";
+        if (opts.optional === true && x29 === undefined) return null;
+        let len = stringLengthInBytes(x29);
+        if (typeof x29 !== "string") {
+            return "expected a string but got " + JSON.stringify(x29);
         }
         if (opts.minLen !== undefined && len < opts.minLen) {
             return `string shorter than min length of ${opts.minLen} chars`;
@@ -4442,30 +4477,30 @@ function checkString(opts = {}) {
             return `string shorter than max length of ${opts.maxLen} chars`;
         }
         if (opts.len !== undefined && len !== opts.len) {
-            return `string does not have required length of ${opts.len} chars: ${x28}`;
+            return `string does not have required length of ${opts.len} chars: ${x29}`;
         }
-        if (opts.allowedChars !== undefined && !onlyHasChars(x28, opts.allowedChars)) {
+        if (opts.allowedChars !== undefined && !onlyHasChars(x29, opts.allowedChars)) {
             return "contains disallowed characters";
         }
         return null;
     };
 }
 function checkInt(opts = {}) {
-    return (x29)=>{
-        if (opts.optional !== true && x29 === undefined) return "required";
-        if (opts.optional === true && x29 === undefined) return null;
-        if (opts.nullable !== true && x29 === null) return "not nullable";
-        if (opts.nullable === true && x29 === null) return null;
-        if (typeof x29 !== "number") {
-            return "expected a number but got " + JSON.stringify(x29);
+    return (x30)=>{
+        if (opts.optional !== true && x30 === undefined) return "required";
+        if (opts.optional === true && x30 === undefined) return null;
+        if (opts.nullable !== true && x30 === null) return "not nullable";
+        if (opts.nullable === true && x30 === null) return null;
+        if (typeof x30 !== "number") {
+            return "expected a number but got " + JSON.stringify(x30);
         }
-        if (isNaN(x29)) return "is NaN";
-        if (!isFinite(x29)) return "is Infinity";
-        if (x29 !== Math.round(x29)) return "expected an integer";
-        if (opts.min !== undefined && x29 < opts.min) {
+        if (isNaN(x30)) return "is NaN";
+        if (!isFinite(x30)) return "is Infinity";
+        if (x30 !== Math.round(x30)) return "expected an integer";
+        if (opts.min !== undefined && x30 < opts.min) {
             return `integer too small (must be >= ${opts.min})`;
         }
-        if (opts.max !== undefined && x29 > opts.max) {
+        if (opts.max !== undefined && x30 > opts.max) {
             return `integer too large (must be <= ${opts.max})`;
         }
         return null;
@@ -4474,10 +4509,10 @@ function checkInt(opts = {}) {
 function checkObj(opts = {}) {
     opts.allowLiteralUndefined = opts.allowLiteralUndefined ?? false;
     opts.allowExtraKeys = opts.allowExtraKeys ?? false;
-    return (x30)=>{
-        if (!isPlainObject(x30)) return "expected an object";
+    return (x31)=>{
+        if (!isPlainObject(x31)) return "expected an object";
         if (opts.allowLiteralUndefined === false) {
-            for (let [k9, v9] of Object.entries(x30)){
+            for (let [k9, v9] of Object.entries(x31)){
                 if (v9 === undefined) {
                     return `${k9} is explicitly set to undefined but should be missing instead`;
                 }
@@ -4485,7 +4520,7 @@ function checkObj(opts = {}) {
         }
         if (opts.objSchema !== undefined) {
             if (opts.allowExtraKeys === false) {
-                let objKeys = Object.keys(x30);
+                let objKeys = Object.keys(x31);
                 let schemaKeys = Object.keys(opts.objSchema);
                 let extraObjKeys = objKeys.filter((k10)=>schemaKeys.indexOf(k10) === -1
                 );
@@ -4494,7 +4529,7 @@ function checkObj(opts = {}) {
                 }
             }
             for (let [key, validator] of Object.entries(opts.objSchema)){
-                let err = validator(x30[key]);
+                let err = validator(x31[key]);
                 if (err !== null) return `${key}: ${err}`;
             }
         }
@@ -4648,8 +4683,7 @@ const CryptoDriverNoble = class {
     }
 };
 export { CryptoDriverNoble as CryptoDriverNoble };
-export { A as deepEqual };
-const deepCopy = structuredClone;
+export { w as deepEqual };
 function microsecondNow() {
     return Date.now() * 1000;
 }
@@ -4673,7 +4707,6 @@ function countChars(str, __char) {
 function isObjectEmpty(obj) {
     return Object.keys(obj).length === 0;
 }
-export { deepCopy as deepCopy };
 export { microsecondNow as microsecondNow };
 export { sleep1 as sleep };
 export { randomId as randomId };
@@ -4961,7 +4994,7 @@ function sortedInPlace(array) {
     return array;
 }
 function compareBasic(a29, b14, order = "ASC") {
-    if (A(a29, b14)) return Cmp.EQ;
+    if (w(a29, b14)) return Cmp.EQ;
     if (order === "ASC" || order === undefined) {
         return a29 < b14 ? Cmp.LT : Cmp.GT;
     } else if (order === "DESC") {
@@ -5076,8 +5109,6 @@ function makeSyncerBag(peer) {
                     partnerMaxLocalIndexOverall: shareStateFromServer.partnerMaxLocalIndexOverall,
                     partnerMaxLocalIndexSoFar: existingShareState.partnerMaxLocalIndexSoFar ?? -1,
                     storageId: clientStorage.replicaId,
-                    maxLocalIndexOverall: clientStorage.getMaxLocalIndex(),
-                    maxLocalIndexSoFar: existingShareState.maxLocalIndexSoFar ?? -1,
                     lastSeenAt: microsecondNow()
                 };
             }
@@ -5107,7 +5138,7 @@ function makeSyncerBag(peer) {
             };
         },
         async processShareQuery (existingShareStates, response) {
-            const { share , storageId , partnerMaxLocalIndexOverall , docs ,  } = response;
+            const { share , storageId , docs ,  } = response;
             const storage = peer.getReplica(share);
             if (storage === undefined) {
                 const err = `share ${share} is unknown; skipping`;
@@ -5118,27 +5149,41 @@ function makeSyncerBag(peer) {
                 const err = `storageId for ${share} is not ${storageId} anymore, it's ${myShareState.partnerStorageId}`;
                 throw err;
             }
-            let pulled = 0;
-            for (const doc of docs){
-                let myShareState = existingShareStates[share];
-                const ingestEvent = await storage.ingest(doc);
-                if (ingestEvent.kind === "failure") {
-                    break;
-                }
-                pulled += 1;
-                myShareState = {
-                    ...myShareState,
-                    partnerMaxLocalIndexOverall,
-                    partnerMaxLocalIndexSoFar: doc._localIndex ?? -1,
-                    lastSeenAt: microsecondNow()
-                };
-            }
+            const ingests = docs.map((doc)=>{
+                return new Promise((resolve, reject)=>{
+                    const shareState = existingShareStates[share];
+                    if (storageId !== shareState.partnerStorageId) {
+                        const err = `storageId for ${share} is not ${storageId} anymore, it's ${myShareState.partnerStorageId}`;
+                        throw reject(err);
+                    }
+                    storage.ingest(doc).then((ingestEvent)=>{
+                        if (ingestEvent.kind === "failure") {
+                            return resolve({
+                                pulled: false,
+                                localIndex: -1
+                            });
+                        }
+                        return resolve({
+                            pulled: true,
+                            localIndex: doc._localIndex ?? -1
+                        });
+                    });
+                });
+            });
+            const ingestResults = await Promise.all(ingests);
+            const pulled1 = ingestResults.filter(({ pulled  })=>pulled
+            );
             return {
-                pulled,
+                pulled: pulled1.length,
                 lastSeenAt: microsecondNow(),
                 shareStates: {
                     ...existingShareStates,
-                    [share]: myShareState
+                    [share]: {
+                        ...myShareState,
+                        partnerMaxLocalIndexSoFar: pulled1.length > 0 ? Math.max(...pulled1.map(({ localIndex  })=>localIndex
+                        )) : myShareState.partnerMaxLocalIndexSoFar,
+                        lastSeenAt: microsecondNow()
+                    }
                 }
             };
         }
@@ -5148,7 +5193,7 @@ class SyncCoordinator {
     _connection;
     _syncerBag;
     _shareStates = {};
-    _interval = null;
+    _timeout = null;
     commonShares = [];
     partnerLastSeenAt = null;
     state = "ready";
@@ -5162,9 +5207,18 @@ class SyncCoordinator {
         const { commonShares , partnerLastSeenAt  } = await this._syncerBag.processSaltedHandshake(saltedHandshakeRes);
         this.commonShares = commonShares;
         this.partnerLastSeenAt = partnerLastSeenAt;
-        const pull = async ()=>{
-            await this._getShareStates();
-            Object.keys(this._shareStates).forEach((key)=>{
+        this._connection.onClose(()=>{
+            this.close();
+        });
+        await this._getShareStates();
+        await this.pull();
+    }
+    async pull() {
+        if (this.state === "closed") {
+            return;
+        }
+        const docPulls = Object.keys(this._shareStates).map((key)=>{
+            return new Promise((resolve)=>{
                 const state = this._shareStates[key];
                 this._pullDocs({
                     query: {
@@ -5175,14 +5229,12 @@ class SyncCoordinator {
                     },
                     storageId: state.partnerStorageId,
                     share: state.share
-                });
+                }).then(resolve);
             });
-        };
-        this._interval = setInterval(pull, 1000);
-        this._connection.onClose(()=>{
-            this.close();
         });
-        await pull();
+        await Promise.all(docPulls);
+        this._timeout = setTimeout(()=>this.pull()
+        , 1000);
     }
     async _getShareStates() {
         const shareStatesRequest = {
@@ -5196,13 +5248,31 @@ class SyncCoordinator {
     async _pullDocs(shareQuery) {
         const queryResponse = await this._connection.request("serveShareQuery", shareQuery);
         const { lastSeenAt , shareStates , pulled  } = await this._syncerBag.processShareQuery(this._shareStates, queryResponse);
-        this._shareStates = shareStates;
+        this._mergeShareStates(shareStates);
         this.partnerLastSeenAt = lastSeenAt;
         return pulled;
     }
+    _mergeShareStates(newShareStates) {
+        const nextShareStates = {};
+        for(const shareAddress in newShareStates){
+            const newShareState = newShareStates[shareAddress];
+            const existingShareState = this._shareStates[shareAddress];
+            if (!existingShareState) {
+                nextShareStates[shareAddress] = newShareState;
+                break;
+            }
+            nextShareStates[shareAddress] = {
+                ...newShareState,
+                lastSeenAt: Math.max(newShareState.lastSeenAt, existingShareState.lastSeenAt),
+                partnerMaxLocalIndexOverall: Math.max(newShareState.partnerMaxLocalIndexOverall, existingShareState.partnerMaxLocalIndexOverall),
+                partnerMaxLocalIndexSoFar: Math.max(newShareState.partnerMaxLocalIndexSoFar, existingShareState.partnerMaxLocalIndexSoFar)
+            };
+        }
+        this._shareStates = nextShareStates;
+    }
     close() {
-        if (this._interval) {
-            clearTimeout(this._interval);
+        if (this._timeout) {
+            clearTimeout(this._timeout);
         }
         this.state = "closed";
     }
@@ -5440,10 +5510,10 @@ function cleanUpQuery(inputQuery) {
         }
     }
     let willMatch = query.historyMode === "all" ? "all" : "all-latest";
-    if (query.filter !== undefined && !A(query.filter, {})) {
+    if (query.filter !== undefined && !w(query.filter, {})) {
         willMatch = "some";
     }
-    if (query.startAfter !== undefined && !A(query.startAfter, {})) {
+    if (query.startAfter !== undefined && !w(query.startAfter, {})) {
         willMatch = "some";
     }
     if (query.limit !== undefined) {
@@ -5727,7 +5797,7 @@ class QueryFollower {
     constructor(replica, query){
         logger5.debug("constructor");
         this.replica = replica;
-        this.query = deepCopy(query);
+        this.query = cloneDeep(query);
         this.bus = new Simplebus();
         logger5.debug("...enforcing rules on supported queries");
         if (query.historyMode !== "all") {
@@ -5955,6 +6025,10 @@ class Replica {
     _isClosed = false;
     _ingestLock;
     constructor(share, validator, driver){
+        const addressIsValidResult = checkShareIsValid(share);
+        if (isErr(addressIsValidResult)) {
+            throw addressIsValidResult;
+        }
         logger6.debug(`constructor.  driver = ${driver?.constructor?.name}`);
         this.replicaId = "replica-" + randomId();
         this.share = share;
@@ -6140,7 +6214,7 @@ class Replica {
             loggerIngest.debug(`  > ...got ${existingDocsSamePath.length}`);
             loggerIngest.debug("  > getting prevLatest and prevSameAuthor");
             let prevLatest = existingDocsSamePath[0] ?? null;
-            let prevSameAuthor = existingDocsSamePath.filter((d)=>d.author === docToIngest.author
+            let prevSameAuthor = existingDocsSamePath.filter((d8)=>d8.author === docToIngest.author
             )[0] ?? null;
             loggerIngest.debug("  > checking if new doc is latest at this path");
             existingDocsSamePath.push(docToIngest);
@@ -6236,6 +6310,10 @@ class Replica {
     }
 }
 export { Replica as Replica };
+const logger7 = new Logger("replica-cache", "green");
+function justLocalIndex({ _localIndex  }) {
+    return _localIndex;
+}
 function sortAndLimit(query, docs) {
     const filteredDocs = [];
     for (const doc of docs){
@@ -6275,18 +6353,37 @@ function sortAndLimit(query, docs) {
     return filteredDocs;
 }
 class ReplicaCache {
+    version = 0;
     _replica;
     _docCache = new Map();
     _timeToLive;
     _onCacheUpdatedCallbacks = new Set();
-    constructor(replica, timeToLive){
+    _isClosed = false;
+    _onFireCacheUpdatedsWrapper = (cb)=>cb()
+    ;
+    constructor(replica, timeToLive, onCacheUpdatedWrapper){
         this._replica = replica;
         this._timeToLive = timeToLive || 1000;
+        if (onCacheUpdatedWrapper) {
+            this._onFireCacheUpdatedsWrapper = onCacheUpdatedWrapper;
+        }
+    }
+    async close() {
+        if (this._isClosed) throw new ReplicaCacheIsClosedError();
+        this._isClosed = true;
+        await Promise.all(Array.from(this._docCache.values()).map((entry)=>entry.follower.close
+        ));
+        this._docCache.clear();
+    }
+    isClosed() {
+        return this._isClosed;
     }
     set(keypair, docToSet) {
+        if (this._isClosed) throw new ReplicaCacheIsClosedError();
         return this._replica.set(keypair, docToSet);
     }
     getAllDocs() {
+        if (this._isClosed) throw new ReplicaCacheIsClosedError();
         if (this._replica.isClosed()) {
             throw new ReplicaIsClosedError();
         }
@@ -6296,6 +6393,7 @@ class ReplicaCache {
         });
     }
     getLatestDocs() {
+        if (this._isClosed) throw new ReplicaCacheIsClosedError();
         if (this._replica.isClosed()) {
             throw new ReplicaIsClosedError();
         }
@@ -6305,6 +6403,7 @@ class ReplicaCache {
         });
     }
     getAllDocsAtPath(path) {
+        if (this._isClosed) throw new ReplicaCacheIsClosedError();
         if (this._replica.isClosed()) {
             throw new ReplicaIsClosedError();
         }
@@ -6317,6 +6416,7 @@ class ReplicaCache {
         });
     }
     getLatestDocAtPath(path) {
+        if (this._isClosed) throw new ReplicaCacheIsClosedError();
         if (this._replica.isClosed()) {
             throw new ReplicaIsClosedError();
         }
@@ -6333,6 +6433,10 @@ class ReplicaCache {
         return docs[0];
     }
     queryDocs(query = {}) {
+        if (this._isClosed) throw new ReplicaCacheIsClosedError();
+        if (this._replica.isClosed()) {
+            throw new ReplicaIsClosedError();
+        }
         const cleanUpQueryResult = cleanUpQuery(query);
         if (cleanUpQueryResult.willMatch === "nothing") {
             return [];
@@ -6340,20 +6444,20 @@ class ReplicaCache {
         const queryString = E(cleanUpQueryResult.query);
         const cachedResult = this._docCache.get(queryString);
         if (cachedResult) {
-            this._replica.queryDocs(query).then((docs)=>{
-                this._docCache.set(queryString, {
-                    ...cachedResult,
-                    docs
-                });
-            });
             if (Date.now() > cachedResult.expires) {
                 this._replica.queryDocs(query).then((docs)=>{
+                    const localIndexes = docs.map(justLocalIndex).sort();
+                    const cacheLocalIndexes = cachedResult.docs.map(justLocalIndex).sort();
+                    if (w(localIndexes, cacheLocalIndexes)) {
+                        return;
+                    }
                     this._docCache.set(queryString, {
-                        follower,
+                        follower: cachedResult.follower,
                         docs,
                         expires: Date.now() + this._timeToLive
                     });
-                    this._fireOnCacheUpdateds();
+                    logger7.debug("Updated cache because result expired.");
+                    this._fireOnCacheUpdateds(queryString);
                 });
             }
             return cachedResult.docs;
@@ -6365,95 +6469,117 @@ class ReplicaCache {
         });
         follower.bus.on((event)=>{
             if (event.kind === "existing" || event.kind === "success") {
-                this._updateCache(event.doc);
+                logger7.debug({
+                    doc: event.doc.path,
+                    queryString
+                });
+                this._updateCache(queryString, event.doc);
             }
         });
+        follower.hatch();
         this._docCache.set(queryString, {
-            docs: [],
             follower,
+            docs: [],
             expires: Date.now() + this._timeToLive
         });
-        follower.hatch();
         this._replica.queryDocs(query).then((docs)=>{
             this._docCache.set(queryString, {
                 follower,
                 docs,
                 expires: Date.now() + this._timeToLive
             });
-            this._fireOnCacheUpdateds();
+            logger7.debug("Updated cache with a new entry.");
+            this._fireOnCacheUpdateds(queryString);
         });
         return [];
     }
     overwriteAllDocsByAuthor(keypair) {
+        if (this._isClosed) throw new ReplicaCacheIsClosedError();
+        if (this._replica.isClosed()) {
+            throw new ReplicaIsClosedError();
+        }
         return this._replica.overwriteAllDocsByAuthor(keypair);
     }
-    _updateCache(doc) {
-        this._docCache.forEach((entry, key)=>{
-            const query = JSON.parse(key);
-            const appendDoc = ()=>{
-                const nextDocs = [
-                    ...entry.docs,
-                    doc
-                ];
-                this._docCache.set(key, {
-                    ...entry,
-                    docs: sortAndLimit(query, nextDocs)
-                });
-                this._fireOnCacheUpdateds();
-            };
-            const replaceDoc = ({ exact  })=>{
-                const nextDocs = entry.docs.map((existingDoc)=>{
-                    if (exact && existingDoc.path === doc.path && existingDoc.author === doc.author) {
-                        return doc;
-                    } else if (!exact && existingDoc.path === doc.path) {
-                        return doc;
-                    }
-                    return existingDoc;
-                });
-                this._docCache.set(key, {
-                    ...entry,
-                    docs: sortAndLimit(query, nextDocs)
-                });
-                this._fireOnCacheUpdateds();
-            };
-            const documentsWithSamePath = entry.docs.filter((existingDoc)=>existingDoc.path === doc.path
-            );
-            const documentsWithSamePathAndAuthor = entry.docs.filter((existingDoc)=>existingDoc.path === doc.path && existingDoc.author === doc.author
-            );
-            if (documentsWithSamePath.length === 0) {
-                if (query.filter && docMatchesFilter(doc, query.filter) || !query.filter) {
-                    appendDoc();
+    _updateCache(key, doc) {
+        const entry = this._docCache.get(key);
+        if (!entry) {
+            return;
+        }
+        const query = JSON.parse(key);
+        const appendDoc = ()=>{
+            const nextDocs = [
+                ...entry.docs,
+                doc
+            ];
+            this._docCache.set(key, {
+                ...entry,
+                docs: sortAndLimit(query, nextDocs)
+            });
+            this._fireOnCacheUpdateds(key);
+        };
+        const replaceDoc = ({ exact  })=>{
+            const nextDocs = entry.docs.map((existingDoc)=>{
+                if (exact && existingDoc.path === doc.path && existingDoc.author === doc.author) {
+                    return doc;
+                } else if (!exact && existingDoc.path === doc.path) {
+                    return doc;
                 }
+                return existingDoc;
+            });
+            this._docCache.set(key, {
+                ...entry,
+                docs: sortAndLimit(query, nextDocs)
+            });
+            this._fireOnCacheUpdateds(key);
+        };
+        const documentsWithSamePath = entry.docs.filter((existingDoc)=>existingDoc.path === doc.path
+        );
+        const documentsWithSamePathAndAuthor = entry.docs.filter((existingDoc)=>existingDoc.path === doc.path && existingDoc.author === doc.author
+        );
+        if (documentsWithSamePath.length === 0) {
+            if (query.filter && docMatchesFilter(doc, query.filter) || !query.filter) {
+                logger7.debug("Updated cache after appending a doc to a entry with matching filter.");
+                appendDoc();
+            }
+            return;
+        }
+        const historyMode = query.historyMode || "latest";
+        if (historyMode === "all") {
+            if (documentsWithSamePathAndAuthor.length === 0) {
+                logger7.debug("Updated cache after appending a version of a doc to a historyMode: all query.");
+                appendDoc();
                 return;
             }
-            const historyMode = query.historyMode || "latest";
-            if (historyMode === "all") {
-                if (documentsWithSamePathAndAuthor.length === 0) {
-                    appendDoc();
-                    return;
-                }
-                replaceDoc({
-                    exact: true
-                });
-                return;
-            }
-            const latestDoc = documentsWithSamePath[0];
-            const docIsDifferent = doc.author !== latestDoc?.author || !A(doc, latestDoc);
-            const docIsLater = doc.timestamp > latestDoc.timestamp;
-            if (docIsDifferent && docIsLater) {
-                replaceDoc({
-                    exact: false
-                });
-                return;
-            }
+            logger7.debug("Updated cache after replacing a version of a doc in a historyMode: all query.");
+            replaceDoc({
+                exact: true
+            });
+            return;
+        }
+        const latestDoc = documentsWithSamePath[0];
+        const docIsDifferent = doc.author !== latestDoc?.author || !w(doc, latestDoc);
+        const docIsLater = doc.timestamp > latestDoc.timestamp;
+        if (docIsDifferent && docIsLater) {
+            logger7.debug("Updated cache after replacing a doc with its latest version.");
+            replaceDoc({
+                exact: false
+            });
+            return;
+        }
+    }
+    _fireOnCacheUpdateds(entry) {
+        this.version++;
+        this._onFireCacheUpdatedsWrapper(()=>{
+            this._onCacheUpdatedCallbacks.forEach((cb)=>{
+                cb(entry);
+            });
         });
     }
-    _fireOnCacheUpdateds() {
-        return Promise.all(Array.from(this._onCacheUpdatedCallbacks.values()).map((callback)=>{
-            return callback();
-        }));
-    }
     onCacheUpdated(callback) {
+        if (this._isClosed) throw new ReplicaCacheIsClosedError();
+        if (this._replica.isClosed()) {
+            throw new ReplicaIsClosedError();
+        }
         this._onCacheUpdatedCallbacks.add(callback);
         return ()=>{
             this._onCacheUpdatedCallbacks.delete(callback);
@@ -6461,7 +6587,7 @@ class ReplicaCache {
     }
 }
 export { ReplicaCache as ReplicaCache };
-let logger7 = new Logger("storage driver async memory", "yellow");
+let logger8 = new Logger("storage driver async memory", "yellow");
 function combinePathAndAuthor(doc) {
     return `${doc.path}|${doc.author}`;
 }
@@ -6503,24 +6629,24 @@ class ReplicaDriverMemory {
     docByPathAndAuthor = new Map();
     docsByPathNewestFirst = new Map();
     constructor(share){
-        logger7.debug("constructor");
+        logger8.debug("constructor");
         this.share = share;
     }
     isClosed() {
         return this._isClosed;
     }
     close(erase) {
-        logger7.debug("close");
+        logger8.debug("close");
         if (this._isClosed) throw new ReplicaIsClosedError();
         if (erase) {
-            logger7.debug("...close: and erase");
+            logger8.debug("...close: and erase");
             this._configKv = {};
             this._maxLocalIndex = -1;
             this.docsByPathNewestFirst.clear();
             this.docByPathAndAuthor.clear();
         }
         this._isClosed = true;
-        logger7.debug("...close is done.");
+        logger8.debug("...close is done.");
         return Promise.resolve();
     }
     async getConfig(key) {
@@ -6543,7 +6669,7 @@ class ReplicaDriverMemory {
     }
     getMaxLocalIndex() {
         if (this._isClosed) throw new ReplicaIsClosedError();
-        logger7.debug(`getMaxLocalIndex(): it's ${this._maxLocalIndex}`);
+        logger8.debug(`getMaxLocalIndex(): it's ${this._maxLocalIndex}`);
         return this._maxLocalIndex;
     }
     async _getAllDocs() {
@@ -6561,16 +6687,16 @@ class ReplicaDriverMemory {
         return docs;
     }
     async queryDocs(queryToClean) {
-        logger7.debug("queryDocs", queryToClean);
+        logger8.debug("queryDocs", queryToClean);
         if (this._isClosed) throw new ReplicaIsClosedError();
         let { query , willMatch  } = cleanUpQuery(queryToClean);
-        logger7.debug(`    cleanUpQuery.  willMatch = ${willMatch}`);
+        logger8.debug(`    cleanUpQuery.  willMatch = ${willMatch}`);
         if (willMatch === "nothing") {
             return [];
         }
-        logger7.debug(`    getting docs; historyMode = ${query.historyMode}`);
+        logger8.debug(`    getting docs; historyMode = ${query.historyMode}`);
         let docs = query.historyMode === "all" ? await this._getAllDocs() : await this._getLatestDocs();
-        logger7.debug(`    ordering docs: ${query.orderBy}`);
+        logger8.debug(`    ordering docs: ${query.orderBy}`);
         if (query.orderBy === "path ASC") {
             docs.sort(docComparePathASCthenNewestFirst);
         } else if (query.orderBy === "path DESC") {
@@ -6583,7 +6709,7 @@ class ReplicaDriverMemory {
             throw new ValidationError("unrecognized query orderBy: " + JSON.stringify(query.orderBy));
         }
         let filteredDocs = [];
-        logger7.debug(`    filtering docs`);
+        logger8.debug(`    filtering docs`);
         for (let doc of docs){
             if (query.orderBy === "path ASC") {
                 if (query.startAfter !== undefined) {
@@ -6616,14 +6742,14 @@ class ReplicaDriverMemory {
             if (query.filter && !docMatchesFilter(doc, query.filter)) continue;
             filteredDocs.push(doc);
             if (query.limit !== undefined && filteredDocs.length >= query.limit) {
-                logger7.debug(`    ....hit limit of ${query.limit}`);
+                logger8.debug(`    ....hit limit of ${query.limit}`);
                 break;
             }
         }
-        logger7.debug(`    queryDocs is done: found ${filteredDocs.length} docs.`);
+        logger8.debug(`    queryDocs is done: found ${filteredDocs.length} docs.`);
         return filteredDocs;
     }
-    async upsert(doc) {
+    upsert(doc) {
         if (this._isClosed) throw new ReplicaIsClosedError();
         doc = {
             ...doc
@@ -6631,19 +6757,19 @@ class ReplicaDriverMemory {
         this._maxLocalIndex += 1;
         doc._localIndex = this._maxLocalIndex;
         Object.freeze(doc);
-        logger7.debug("upsert", doc);
+        logger8.debug("upsert", doc);
         this.docByPathAndAuthor.set(combinePathAndAuthor(doc), doc);
         let docsByPath = this.docsByPathNewestFirst.get(doc.path) ?? [];
-        docsByPath = docsByPath.filter((d)=>d.author !== doc.author
+        docsByPath = docsByPath.filter((d9)=>d9.author !== doc.author
         );
         docsByPath.push(doc);
         docsByPath.sort(docComparePathASCthenNewestFirst);
         this.docsByPathNewestFirst.set(doc.path, docsByPath);
-        return doc;
+        return Promise.resolve(doc);
     }
 }
 export { ReplicaDriverMemory as ReplicaDriverMemory };
-let logger8 = new Logger("storage driver localStorage", "yellowBright");
+let logger9 = new Logger("storage driver localStorage", "yellowBright");
 function isSerializedDriverDocs(value) {
     if (typeof value !== "object") {
         return false;
@@ -6655,42 +6781,45 @@ class ReplicaDriverLocalStorage extends ReplicaDriverMemory {
     _localStorageKeyDocs;
     constructor(share){
         super(share);
-        logger8.debug("constructor");
+        logger9.debug("constructor");
         this._localStorageKeyConfig = `stonesoup:config:${share}`;
         this._localStorageKeyDocs = `stonesoup:documents:pathandauthor:${share}`;
-        let existingData = localStorage.getItem(this._localStorageKeyDocs);
+        const existingData = localStorage.getItem(this._localStorageKeyDocs);
         if (existingData !== null) {
-            logger8.debug("...constructor: loading data from localStorage");
-            let parsed = JSON.parse(existingData);
+            logger9.debug("...constructor: loading data from localStorage");
+            const parsed = JSON.parse(existingData);
             if (!isSerializedDriverDocs(parsed)) {
                 console.warn(`localStorage data could not be parsed for share ${share}`);
                 return;
             }
             this.docByPathAndAuthor = new Map(Object.entries(parsed.byPathAndAuthor));
             this.docsByPathNewestFirst = new Map(Object.entries(parsed.byPathNewestFirst));
+            const localIndexes = Array.from(this.docByPathAndAuthor.values()).map((doc)=>doc._localIndex
+            );
+            this._maxLocalIndex = Math.max(...localIndexes);
         } else {
-            logger8.debug("...constructor: there was no existing data in localStorage");
+            logger9.debug("...constructor: there was no existing data in localStorage");
         }
-        logger8.debug("...constructor is done.");
+        logger9.debug("...constructor is done.");
     }
     close(erase) {
-        logger8.debug("close");
+        logger9.debug("close");
         if (this._isClosed) throw new ReplicaIsClosedError();
         if (erase) {
-            logger8.debug("...close: and erase");
+            logger9.debug("...close: and erase");
             this._configKv = {};
             this._maxLocalIndex = -1;
             this.docsByPathNewestFirst.clear();
             this.docByPathAndAuthor.clear();
-            logger8.debug("...close: erasing localStorage");
+            logger9.debug("...close: erasing localStorage");
             localStorage.removeItem(this._localStorageKeyDocs);
             for (let key of this._listConfigKeysSync()){
                 this._deleteConfigSync(key);
             }
-            logger8.debug("...close: erasing is done");
+            logger9.debug("...close: erasing is done");
         }
         this._isClosed = true;
-        logger8.debug("...close is done.");
+        logger9.debug("...close is done.");
         return Promise.resolve();
     }
     _getConfigSync(key) {
@@ -6733,7 +6862,7 @@ class ReplicaDriverLocalStorage extends ReplicaDriverMemory {
     }
     async upsert(doc) {
         if (this._isClosed) throw new ReplicaIsClosedError();
-        let upsertedDoc = await super.upsert(doc);
+        const upsertedDoc = await super.upsert(doc);
         const docsToBeSerialised = {
             byPathAndAuthor: Object.fromEntries(this.docByPathAndAuthor),
             byPathNewestFirst: Object.fromEntries(this.docsByPathNewestFirst)
@@ -6742,7 +6871,7 @@ class ReplicaDriverLocalStorage extends ReplicaDriverMemory {
         return upsertedDoc;
     }
 }
-let logger9 = new Logger("storage driver indexeddb", "yellowBright");
+const logger10 = new Logger("replica driver indexeddb", "yellowBright");
 const DOC_STORE = "documents";
 const DOCUMENTS_ID = "allDocs";
 const CONFIG_STORE = "config";
@@ -6750,7 +6879,7 @@ class ReplicaDriverIndexedDB extends ReplicaDriverMemory {
     _db = null;
     constructor(share){
         super(share);
-        logger9.debug("constructor");
+        logger10.debug("constructor");
         this.docByPathAndAuthor = new Map();
         this.docsByPathNewestFirst = new Map();
     }
@@ -6762,10 +6891,11 @@ class ReplicaDriverIndexedDB extends ReplicaDriverMemory {
             if (!window.indexedDB) {
                 return reject();
             }
-            const request = window.indexedDB.open(`stonesoup:database:${this.share}`, 1);
+            const request = window.indexedDB.open(`earthstar:share:${this.share}`, 1);
             request.onerror = ()=>{
-                logger9.error(`Could not open IndexedDB for ${this.share}`);
-                logger9.error(request.error);
+                logger10.error(`Could not open IndexedDB for ${this.share}`);
+                logger10.error(request.error);
+                return reject(request.error);
             };
             request.onupgradeneeded = function() {
                 const db = request.result;
@@ -6784,44 +6914,47 @@ class ReplicaDriverIndexedDB extends ReplicaDriverMemory {
                 const store = transaction.objectStore(DOC_STORE);
                 const retrieval = store.get(DOCUMENTS_ID);
                 retrieval.onsuccess = ()=>{
-                    const docs = retrieval.result;
-                    if (!docs) {
+                    if (!retrieval.result || !retrieval.result["docs"]) {
                         return resolve(request.result);
                     }
+                    const docs = retrieval.result["docs"];
                     this.docByPathAndAuthor = new Map(Object.entries(docs.byPathAndAuthor));
                     this.docsByPathNewestFirst = new Map(Object.entries(docs.byPathNewestFirst));
+                    const localIndexes = Array.from(this.docByPathAndAuthor.values()).map((doc)=>doc._localIndex
+                    );
+                    this._maxLocalIndex = Math.max(...localIndexes);
                     return resolve(request.result);
                 };
                 retrieval.onerror = ()=>{
-                    logger9.debug(`StorageIndexedDB constructing: No existing DB for ${this.share}`);
+                    logger10.debug(`StorageIndexedDB constructing: No existing DB for ${this.share}`);
                     reject();
                 };
             };
         });
     }
     async close(erase) {
-        logger9.debug("close");
+        logger10.debug("close");
         if (this._isClosed) {
             throw new ReplicaIsClosedError();
         }
         if (erase) {
-            logger9.debug("...close: and erase");
+            logger10.debug("...close: and erase");
             this._configKv = {};
             this._maxLocalIndex = -1;
             this.docsByPathNewestFirst.clear();
             this.docByPathAndAuthor.clear();
-            logger9.debug("...close: erasing indexeddb");
+            logger10.debug("...close: erasing indexeddb");
             const db = await this.getIndexedDb();
             for (let key of (await this.listConfigKeys())){
                 await this.deleteConfig(key);
             }
             const deletion = db.transaction(DOC_STORE, "readwrite").objectStore(DOC_STORE).delete(DOCUMENTS_ID);
             deletion.onsuccess = ()=>{
-                logger9.debug("...close: erasing is done");
+                logger10.debug("...close: erasing is done");
             };
         }
         this._isClosed = true;
-        logger9.debug("...close is done.");
+        logger10.debug("...close is done.");
     }
     async getConfig(key) {
         if (this._isClosed) {
@@ -6890,11 +7023,16 @@ class ReplicaDriverIndexedDB extends ReplicaDriverMemory {
             };
         });
     }
+    async queryDocs(query) {
+        await this.getIndexedDb();
+        const result = await super.queryDocs(query);
+        return result;
+    }
     async upsert(doc) {
         if (this._isClosed) {
             throw new ReplicaIsClosedError();
         }
-        let upsertedDoc = await super.upsert(doc);
+        const upsertedDoc = await super.upsert(doc);
         const docs = {
             byPathAndAuthor: Object.fromEntries(this.docByPathAndAuthor),
             byPathNewestFirst: Object.fromEntries(this.docsByPathNewestFirst)

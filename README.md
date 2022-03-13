@@ -4,7 +4,7 @@
 
 ```html
 <script type="module">
-  import * as Earthstar from "https://cdn.earthstar-project.org/js/earthstar.bundle.v7.1.0.js";
+  import * as Earthstar from "https://cdn.earthstar-project.org/js/earthstar.bundle.v8.2.4.js";
 </script>
 ```
 
@@ -15,7 +15,7 @@ Include this repo as a npm dependency in `package.json`. Tagged versions of this
 ```json
 {
   "dependencies": {
-    "earthstar": "basham/earthstar-bundle#v7.1.0"
+    "earthstar-bundle": "basham/earthstar-bundle#v8.2.4"
   }
 }
 ```
@@ -25,3 +25,11 @@ Then import the bundle from the `node_modules` folder, like normal.
 ```js
 import * as Earthstar from 'earthstar'
 ```
+
+## Updating the bundle
+
+1. Update the Earthstar version in `Makefile` and `package.json`.
+2. Make the bundle (`make bundle`).
+3. Commit.
+4. Tag the commit.
+5. Push to GitHub.
