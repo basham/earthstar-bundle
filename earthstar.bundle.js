@@ -735,70 +735,70 @@ var y1 = M((u)=>{
     });
     u.Hash = u.createHash = void 0;
     var O3 = [
-        1116352408 | 0,
-        1899447441 | 0,
-        3049323471 | 0,
-        3921009573 | 0,
-        961987163 | 0,
-        1508970993 | 0,
-        2453635748 | 0,
-        2870763221 | 0,
-        3624381080 | 0,
-        310598401 | 0,
-        607225278 | 0,
-        1426881987 | 0,
-        1925078388 | 0,
-        2162078206 | 0,
-        2614888103 | 0,
-        3248222580 | 0,
-        3835390401 | 0,
-        4022224774 | 0,
-        264347078 | 0,
-        604807628 | 0,
-        770255983 | 0,
-        1249150122 | 0,
-        1555081692 | 0,
-        1996064986 | 0,
-        2554220882 | 0,
-        2821834349 | 0,
-        2952996808 | 0,
-        3210313671 | 0,
-        3336571891 | 0,
-        3584528711 | 0,
-        113926993 | 0,
-        338241895 | 0,
-        666307205 | 0,
-        773529912 | 0,
-        1294757372 | 0,
-        1396182291 | 0,
-        1695183700 | 0,
-        1986661051 | 0,
-        2177026350 | 0,
-        2456956037 | 0,
-        2730485921 | 0,
-        2820302411 | 0,
-        3259730800 | 0,
-        3345764771 | 0,
-        3516065817 | 0,
-        3600352804 | 0,
-        4094571909 | 0,
-        275423344 | 0,
-        430227734 | 0,
-        506948616 | 0,
-        659060556 | 0,
-        883997877 | 0,
-        958139571 | 0,
-        1322822218 | 0,
-        1537002063 | 0,
-        1747873779 | 0,
-        1955562222 | 0,
-        2024104815 | 0,
-        2227730452 | 0,
-        2361852424 | 0,
-        2428436474 | 0,
-        2756734187 | 0,
-        3204031479 | 0,
-        3329325298 | 0
+        1116352408,
+        1899447441,
+        -1245643825,
+        -373957723,
+        961987163,
+        1508970993,
+        -1841331548,
+        -1424204075,
+        -670586216,
+        310598401,
+        607225278,
+        1426881987,
+        1925078388,
+        -2132889090,
+        -1680079193,
+        -1046744716,
+        -459576895,
+        -272742522,
+        264347078,
+        604807628,
+        770255983,
+        1249150122,
+        1555081692,
+        1996064986,
+        -1740746414,
+        -1473132947,
+        -1341970488,
+        -1084653625,
+        -958395405,
+        -710438585,
+        113926993,
+        338241895,
+        666307205,
+        773529912,
+        1294757372,
+        1396182291,
+        1695183700,
+        1986661051,
+        -2117940946,
+        -1838011259,
+        -1564481375,
+        -1474664885,
+        -1035236496,
+        -949202525,
+        -778901479,
+        -694614492,
+        -200395387,
+        275423344,
+        430227734,
+        506948616,
+        659060556,
+        883997877,
+        958139571,
+        1322822218,
+        1537002063,
+        1747873779,
+        1955562222,
+        2024104815,
+        -2067236844,
+        -1933114872,
+        -1866530822,
+        -1538233109,
+        -1090935817,
+        -965641998
     ], A1 = {
         sha256: 1
     };
@@ -809,7 +809,7 @@ var y1 = M((u)=>{
     u.createHash = P;
     var F = class {
         constructor(){
-            this.A = 1779033703 | 0, this.B = 3144134277 | 0, this.C = 1013904242 | 0, this.D = 2773480762 | 0, this.E = 1359893119 | 0, this.F = 2600822924 | 0, this.G = 528734635 | 0, this.H = 1541459225 | 0, this._size = 0, this._sp = 0, (!w3 || d2 >= 8000) && (w3 = new ArrayBuffer(8000), d2 = 0), this._byte = new Uint8Array(w3, d2, 80), this._word = new Int32Array(w3, d2, 20), d2 += 80;
+            this.A = 1779033703, this.B = -1150833019, this.C = 1013904242, this.D = -1521486534, this.E = 1359893119, this.F = -1694144372, this.G = 528734635, this.H = 1541459225, this._size = 0, this._sp = 0, (!w3 || d2 >= 8000) && (w3 = new ArrayBuffer(8000), d2 = 0), this._byte = new Uint8Array(w3, d2, 80), this._word = new Int32Array(w3, d2, 20), d2 += 80;
         }
         update(e) {
             if (typeof e == "string") return this._utf8(e);
@@ -4707,12 +4707,28 @@ function countChars(str, __char) {
 function isObjectEmpty(obj) {
     return Object.keys(obj).length === 0;
 }
+function generateShareAddress(name) {
+    const randomFromString = (str)=>{
+        return str[Math.floor(Math.random() * str.length)];
+    };
+    const firstLetter = randomFromString(alphaLower);
+    const rest = Array.from(Array(11), ()=>randomFromString(workspaceKeyChars)
+    ).join("");
+    const suffix = `${firstLetter}${rest}`;
+    const address = `+${name}.${suffix}`;
+    const isValid = checkShareIsValid(address);
+    if (isErr(isValid)) {
+        return isValid;
+    }
+    return address;
+}
 export { microsecondNow as microsecondNow };
 export { sleep1 as sleep };
 export { randomId as randomId };
 export { replaceAll as replaceAll };
 export { countChars as countChars };
 export { isObjectEmpty as isObjectEmpty };
+export { generateShareAddress as generateShareAddress };
 function encodeAuthorKeypairToStrings(shortname, pair) {
     return {
         address: assembleAuthorAddress(shortname, base32BytesToString(pair.pubkey)),
@@ -5036,7 +5052,7 @@ export { compareByObjArrayFn as compareByObjArrayFn };
 function saltAndHashShare(salt, share) {
     return Crypto.sha256base32(salt + share + salt);
 }
-function makeSyncerBag(peer) {
+function makeSyncerBag(peer, onCaughtUp) {
     return {
         async serveSaltedHandshake () {
             const salt = randomId();
@@ -5160,11 +5176,13 @@ function makeSyncerBag(peer) {
                         if (ingestEvent.kind === "failure") {
                             return resolve({
                                 pulled: false,
+                                ingested: false,
                                 localIndex: -1
                             });
                         }
                         return resolve({
                             pulled: true,
+                            ingested: ingestEvent.kind === "success",
                             localIndex: doc._localIndex ?? -1
                         });
                     });
@@ -5173,135 +5191,222 @@ function makeSyncerBag(peer) {
             const ingestResults = await Promise.all(ingests);
             const pulled1 = ingestResults.filter(({ pulled  })=>pulled
             );
+            const ingested1 = ingestResults.filter(({ ingested  })=>ingested
+            );
             return {
                 pulled: pulled1.length,
+                ingested: ingested1.length,
                 lastSeenAt: microsecondNow(),
                 shareStates: {
                     ...existingShareStates,
                     [share]: {
                         ...myShareState,
-                        partnerMaxLocalIndexSoFar: pulled1.length > 0 ? Math.max(...pulled1.map(({ localIndex  })=>localIndex
-                        )) : myShareState.partnerMaxLocalIndexSoFar,
+                        partnerMaxLocalIndexOverall: response.partnerMaxLocalIndexOverall,
+                        partnerMaxLocalIndexSoFar: Math.max(...pulled1.map(({ localIndex  })=>localIndex
+                        ), myShareState.partnerMaxLocalIndexSoFar),
                         lastSeenAt: microsecondNow()
                     }
                 }
             };
+        },
+        notifyCaughtUpChange (storageId, isCaughtUp) {
+            if (onCaughtUp) {
+                onCaughtUp(storageId, isCaughtUp);
+            }
         }
     };
 }
 class SyncCoordinator {
-    _connection;
-    _syncerBag;
-    _shareStates = {};
-    _timeout = null;
-    commonShares = [];
+    connection;
+    syncerBag;
+    shareStates = {};
+    peerReplicaMapUnsub;
+    pullTimeouts = new Map();
+    syncStatuses = new SuperbusMap();
     partnerLastSeenAt = null;
     state = "ready";
+    get commonShares() {
+        return Array.from(this.syncStatuses.keys());
+    }
     constructor(peer, connection){
-        this._syncerBag = makeSyncerBag(peer);
-        this._connection = connection;
+        this.syncerBag = makeSyncerBag(peer);
+        this.connection = connection;
+        this.peerReplicaMapUnsub = peer.replicaMap.bus.on("*", ()=>{
+            this.performSaltedHandshake().then(()=>{
+                this.getShareStates();
+            });
+        });
     }
     async start() {
         this.state = "active";
-        const saltedHandshakeRes = await this._connection.request("serveSaltedHandshake");
-        const { commonShares , partnerLastSeenAt  } = await this._syncerBag.processSaltedHandshake(saltedHandshakeRes);
-        this.commonShares = commonShares;
-        this.partnerLastSeenAt = partnerLastSeenAt;
-        this._connection.onClose(()=>{
+        await this.performSaltedHandshake();
+        this.connection.onClose(()=>{
             this.close();
         });
-        await this._getShareStates();
-        await this.pull();
+        await this.getShareStates();
     }
-    async pull() {
+    async performSaltedHandshake() {
+        const saltedHandshakeRes = await this.connection.request("serveSaltedHandshake");
+        const { commonShares , partnerLastSeenAt  } = await this.syncerBag.processSaltedHandshake(saltedHandshakeRes);
+        for (const share of commonShares){
+            if (!this.syncStatuses.has(share)) {
+                this.syncStatuses.set(share, {
+                    ingestedCount: 0,
+                    pulledCount: 0,
+                    isCaughtUp: false,
+                    partnerIsCaughtUp: false
+                });
+            }
+        }
+        for(const shareAddress in this.syncStatuses){
+            if (!commonShares.includes(shareAddress)) {
+                await this.syncStatuses.delete(shareAddress);
+            }
+        }
+        this.partnerLastSeenAt = partnerLastSeenAt;
+    }
+    async pull(shareAddress) {
+        const state = this.shareStates[shareAddress];
+        if (this.state === "closed" || !state) {
+            console.error(`%c Could not find ${shareAddress} in share states...`, "background-color: red;");
+            return;
+        }
+        const queryResponse = await this.connection.request("serveShareQuery", {
+            query: {
+                historyMode: "all",
+                orderBy: "localIndex ASC",
+                startAfter: {
+                    localIndex: state.partnerMaxLocalIndexSoFar
+                },
+                limit: 10
+            },
+            storageId: state.partnerStorageId,
+            share: state.share
+        });
+        const { lastSeenAt , shareStates , ingested , pulled  } = await this.syncerBag.processShareQuery(this.shareStates, queryResponse);
+        this.mergeShareStates(shareStates);
+        this.partnerLastSeenAt = lastSeenAt;
+        const mergedShareState = this.shareStates[shareAddress];
+        const syncStatus = this.syncStatuses.get(shareAddress);
+        if (!syncStatus) {
+            return;
+        }
+        const nextIsCaughtUp = mergedShareState.partnerMaxLocalIndexSoFar >= mergedShareState.partnerMaxLocalIndexOverall;
+        if (ingested > 0 || pulled > 0 || nextIsCaughtUp !== syncStatus.isCaughtUp) {
+            await this.syncStatuses.set(shareAddress, {
+                ingestedCount: syncStatus.ingestedCount + ingested,
+                pulledCount: syncStatus.pulledCount + pulled,
+                isCaughtUp: nextIsCaughtUp,
+                partnerIsCaughtUp: syncStatus.partnerIsCaughtUp
+            });
+        }
         if (this.state === "closed") {
             return;
         }
-        const docPulls = Object.keys(this._shareStates).map((key)=>{
-            return new Promise((resolve)=>{
-                const state = this._shareStates[key];
-                this._pullDocs({
-                    query: {
-                        orderBy: "localIndex ASC",
-                        startAfter: {
-                            localIndex: state.partnerMaxLocalIndexSoFar
-                        }
-                    },
-                    storageId: state.partnerStorageId,
-                    share: state.share
-                }).then(resolve);
-            });
-        });
-        await Promise.all(docPulls);
-        this._timeout = setTimeout(()=>this.pull()
-        , 1000);
+        await this.connection.notify("notifyCaughtUpChange", mergedShareState.storageId, nextIsCaughtUp);
+        clearTimeout(this.pullTimeouts.get(shareAddress));
+        this.pullTimeouts.set(shareAddress, setTimeout(()=>{
+            this.pull(shareAddress);
+        }, nextIsCaughtUp ? 1000 : 0));
     }
-    async _getShareStates() {
+    async getShareStates() {
         const shareStatesRequest = {
-            commonShares: this.commonShares
+            commonShares: Array.from(this.syncStatuses.keys())
         };
-        const shareStatesResponse = await this._connection.request("serveAllShareStates", shareStatesRequest);
-        const { lastSeenAt , shareStates  } = this._syncerBag.processAllShareStates(this._shareStates, shareStatesRequest, shareStatesResponse);
+        const shareStatesResponse = await this.connection.request("serveAllShareStates", shareStatesRequest);
+        const { lastSeenAt , shareStates  } = this.syncerBag.processAllShareStates(this.shareStates, shareStatesRequest, shareStatesResponse);
         this.partnerLastSeenAt = lastSeenAt;
-        this._shareStates = shareStates;
+        const prevShares = Object.keys(this.shareStates);
+        const nextShares = Object.keys(shareStates);
+        this.shareStates = shareStates;
+        for(const nextShare in shareStates){
+            if (!prevShares.includes(nextShare)) {
+                this.pull(nextShare);
+            }
+        }
+        for (const oldShare of prevShares){
+            if (!nextShares.includes(oldShare)) {
+                this.pullTimeouts.delete(oldShare);
+            }
+        }
     }
-    async _pullDocs(shareQuery) {
-        const queryResponse = await this._connection.request("serveShareQuery", shareQuery);
-        const { lastSeenAt , shareStates , pulled  } = await this._syncerBag.processShareQuery(this._shareStates, queryResponse);
-        this._mergeShareStates(shareStates);
-        this.partnerLastSeenAt = lastSeenAt;
-        return pulled;
-    }
-    _mergeShareStates(newShareStates) {
+    mergeShareStates(newShareStates) {
         const nextShareStates = {};
         for(const shareAddress in newShareStates){
             const newShareState = newShareStates[shareAddress];
-            const existingShareState = this._shareStates[shareAddress];
+            const existingShareState = this.shareStates[shareAddress];
             if (!existingShareState) {
                 nextShareStates[shareAddress] = newShareState;
                 break;
             }
             nextShareStates[shareAddress] = {
                 ...newShareState,
-                lastSeenAt: Math.max(newShareState.lastSeenAt, existingShareState.lastSeenAt),
-                partnerMaxLocalIndexOverall: Math.max(newShareState.partnerMaxLocalIndexOverall, existingShareState.partnerMaxLocalIndexOverall),
-                partnerMaxLocalIndexSoFar: Math.max(newShareState.partnerMaxLocalIndexSoFar, existingShareState.partnerMaxLocalIndexSoFar)
+                lastSeenAt: Math.max(newShareState.lastSeenAt),
+                partnerMaxLocalIndexOverall: newShareState.partnerMaxLocalIndexOverall,
+                partnerMaxLocalIndexSoFar: newShareState.partnerMaxLocalIndexSoFar
             };
         }
-        this._shareStates = nextShareStates;
+        this.shareStates = nextShareStates;
+    }
+    async storageCaughtUp(storageId, isCaughtUp) {
+        for(const shareAddress in this.shareStates){
+            const shareState = this.shareStates[shareAddress];
+            const syncStatus = this.syncStatuses.get(shareAddress);
+            if (shareState.partnerStorageId === storageId && syncStatus) {
+                await this.syncStatuses.set(shareState.share, {
+                    ...syncStatus,
+                    partnerIsCaughtUp: isCaughtUp
+                });
+            }
+        }
     }
     close() {
-        if (this._timeout) {
-            clearTimeout(this._timeout);
-        }
+        this.pullTimeouts.forEach((timeout)=>clearTimeout(timeout)
+        );
+        this.peerReplicaMapUnsub();
         this.state = "closed";
     }
 }
 class Syncer {
     transport;
-    _coordinators = new Map();
-    _peer;
+    coordinators = new Map();
+    peer;
+    syncStatuses = new SuperbusMap();
     constructor(peer, makeTransport){
-        this._peer = peer;
-        this.transport = makeTransport(makeSyncerBag(peer));
+        this.peer = peer;
+        this.transport = makeTransport(makeSyncerBag(peer, (storageId, isCaughtUp)=>this.onCaughtUp(storageId, isCaughtUp)
+        ));
         this.transport.connections.onAdd((connection)=>{
-            const coordinator = new SyncCoordinator(this._peer, connection);
-            this._coordinators.set(connection._deviceId, coordinator);
+            const coordinator = new SyncCoordinator(this.peer, connection);
+            this.coordinators.set(connection.description, coordinator);
             coordinator.start();
+            coordinator.syncStatuses.bus.on("*", async ()=>{
+                const syncStatuses = {};
+                for (const [share, status] of coordinator.syncStatuses.entries()){
+                    syncStatuses[share] = status;
+                }
+                await this.syncStatuses.set(connection.description, syncStatuses);
+            });
         });
         this.transport.connections.onDelete((connection)=>{
-            const coordinator = this._coordinators.get(connection.description);
+            const coordinator = this.coordinators.get(connection.description);
             if (coordinator) {
                 coordinator.close();
             }
-            this._coordinators.delete(connection.description);
+            this.syncStatuses.delete(connection.description);
+            this.coordinators.delete(connection.description);
+        });
+    }
+    onCaughtUp(storageId, isCaughtUp) {
+        this.coordinators.forEach((coordinator)=>{
+            coordinator.storageCaughtUp(storageId, isCaughtUp);
         });
     }
     close() {
-        this._coordinators.forEach((coordinator)=>{
+        this.coordinators.forEach((coordinator)=>{
             coordinator.close();
         });
-        this._coordinators.clear();
+        this.coordinators.clear();
         this.transport.close();
     }
 }
@@ -5310,10 +5415,10 @@ const logger3 = new Logger("peer", "blueBright");
 const J2 = JSON.stringify;
 class Peer {
     peerId;
-    replicaMap;
+    replicaMap = new SuperbusMap();
+    syncerStatuses = new SuperbusMap();
     constructor(){
         logger3.debug("constructor");
-        this.replicaMap = new SuperbusMap();
         this.peerId = "peer:" + randomId();
     }
     hasShare(share) {
@@ -5362,65 +5467,78 @@ class Peer {
             logger3.debug(`removeReplica(${J2(replica.share)}) -- same share but it's a different instance now; ignoring`);
         }
     }
-    _httpSyncer = null;
-    _websocketSyncer = null;
-    _localSyncer = null;
-    _targetLocalSyncers = new Map();
-    _addOrGetWebsocketSyncer() {
-        if (!this._websocketSyncer) {
-            this._websocketSyncer = new Syncer(this, (methods)=>{
+    httpSyncer = null;
+    websocketSyncer = null;
+    localSyncer = null;
+    targetLocalSyncers = new Map();
+    subscribeSyncerStatuses(syncer) {
+        syncer.syncStatuses.bus.on("*", async ()=>{
+            for (const [connectionDesc, statuses] of syncer.syncStatuses.entries()){
+                await this.syncerStatuses.set(connectionDesc, statuses);
+            }
+        });
+        syncer.syncStatuses.bus.on("deleted", (_channel, data)=>{
+            this.syncerStatuses.delete(data.key);
+        });
+    }
+    addOrGetWebsocketSyncer() {
+        if (!this.websocketSyncer) {
+            this.websocketSyncer = new Syncer(this, (methods)=>{
                 return new TransportWebsocketClient({
                     deviceId: this.peerId,
                     methods
                 });
             });
+            this.subscribeSyncerStatuses(this.websocketSyncer);
         }
-        return this._websocketSyncer;
+        return this.websocketSyncer;
     }
-    _addOrGetHttpSyncer() {
-        if (!this._httpSyncer) {
-            this._httpSyncer = new Syncer(this, (methods)=>{
+    addOrGetHttpSyncer() {
+        if (!this.httpSyncer) {
+            this.httpSyncer = new Syncer(this, (methods)=>{
                 return new TransportHttpClient({
                     deviceId: this.peerId,
                     methods
                 });
             });
+            this.subscribeSyncerStatuses(this.httpSyncer);
         }
-        return this._httpSyncer;
+        return this.httpSyncer;
     }
-    _addOrGetLocalSyncer() {
-        if (!this._localSyncer) {
-            this._localSyncer = new Syncer(this, (methods)=>{
+    addOrGetLocalSyncer() {
+        if (!this.localSyncer) {
+            this.localSyncer = new Syncer(this, (methods)=>{
                 return new TransportLocal({
                     deviceId: this.peerId,
                     methods,
                     description: `Local:${this.peerId}}`
                 });
             });
+            this.subscribeSyncerStatuses(this.localSyncer);
         }
-        return this._localSyncer;
+        return this.localSyncer;
     }
     sync(target) {
         try {
             const url = new URL(target);
             if (url.protocol.startsWith("ws")) {
-                const websocketSyncer = this._addOrGetWebsocketSyncer();
+                const websocketSyncer = this.addOrGetWebsocketSyncer();
                 const connection = websocketSyncer.transport.addConnection(url.toString());
                 return ()=>{
                     connection.close();
                 };
             }
-            const httpSyncer = this._addOrGetHttpSyncer();
+            const httpSyncer = this.addOrGetHttpSyncer();
             const connection = httpSyncer.transport.addConnection(url.toString());
             return ()=>{
                 connection.close();
             };
         } catch  {
-            const localSyncer = this._addOrGetLocalSyncer();
+            const localSyncer = this.addOrGetLocalSyncer();
             if (this === target) {
                 return ()=>{};
             }
-            const maybeExistingSyncer = this._targetLocalSyncers.get(target.peerId);
+            const maybeExistingSyncer = this.targetLocalSyncers.get(target.peerId);
             if (maybeExistingSyncer) {
                 return ()=>{
                     maybeExistingSyncer.close();
@@ -5433,31 +5551,64 @@ class Peer {
                     description: target.peerId
                 });
             });
-            this._targetLocalSyncers.set(target.peerId, otherSyncer);
+            this.targetLocalSyncers.set(target.peerId, otherSyncer);
             localSyncer.transport.addConnection(otherSyncer.transport);
             return ()=>{
-                this._targetLocalSyncers.delete(target.peerId);
+                this.targetLocalSyncers.delete(target.peerId);
                 otherSyncer.close();
             };
         }
     }
     stopSyncing() {
-        if (this._httpSyncer) {
-            this._httpSyncer.close();
-            this._httpSyncer = null;
+        if (this.httpSyncer) {
+            this.httpSyncer.close();
+            this.httpSyncer = null;
         }
-        if (this._websocketSyncer) {
-            this._websocketSyncer.close();
-            this._websocketSyncer = null;
+        if (this.websocketSyncer) {
+            this.websocketSyncer.close();
+            this.websocketSyncer = null;
         }
-        if (this._localSyncer) {
-            this._targetLocalSyncers.forEach((targetSyncer)=>{
+        if (this.localSyncer) {
+            this.targetLocalSyncers.forEach((targetSyncer)=>{
                 targetSyncer.close();
             });
-            this._targetLocalSyncers.clear();
-            this._localSyncer.close();
-            this._localSyncer = null;
+            this.targetLocalSyncers.clear();
+            this.localSyncer.close();
+            this.localSyncer = null;
         }
+    }
+    async syncUntilCaughtUp(targets) {
+        let unsubscribeFromBus = null;
+        const stopSyncers = [];
+        for (const target of targets){
+            stopSyncers.push(this.sync(target));
+        }
+        const report1 = await new Promise((resolve)=>{
+            unsubscribeFromBus = this.syncerStatuses.bus.on("*", ()=>{
+                const statuses = this.syncerStatuses.values();
+                const caughtUps = [];
+                for (const status of statuses){
+                    for(const shareAddress in status){
+                        caughtUps.push(status[shareAddress].isCaughtUp);
+                        caughtUps.push(status[shareAddress].partnerIsCaughtUp);
+                    }
+                }
+                if (caughtUps.every((isCaughtUp)=>isCaughtUp
+                )) {
+                    const report = {};
+                    for (const [peerDescription, statuses] of this.syncerStatuses.entries()){
+                        report[peerDescription] = statuses;
+                    }
+                    resolve(report);
+                }
+            });
+        });
+        stopSyncers.forEach((stop)=>stop()
+        );
+        if (unsubscribeFromBus !== null) {
+            unsubscribeFromBus();
+        }
+        return Promise.resolve(report1);
     }
 }
 export { Peer as Peer };
@@ -5469,13 +5620,13 @@ const DEFAULT_QUERY = {
     filter: undefined
 };
 export { DEFAULT_QUERY as DEFAULT_QUERY };
-let logger4 = new Logger("query", "greenBright");
+const logger4 = new Logger("query", "greenBright");
 function cleanUpQuery(inputQuery) {
-    let query = {
+    const query = {
         ...DEFAULT_QUERY,
         ...inputQuery
     };
-    let invalidResponse = {
+    const invalidResponse = {
         query: {
             limit: 0
         },
@@ -5521,7 +5672,7 @@ function cleanUpQuery(inputQuery) {
         if (query.limit === 0) willMatch = "nothing";
     }
     if (query.filter !== undefined) {
-        let filter = query.filter;
+        const filter = query.filter;
         if (filter.path && filter.pathStartsWith && !filter.path.startsWith(filter.pathStartsWith)) {
             willMatch = "nothing";
         }
@@ -5585,7 +5736,7 @@ function docMatchesFilter(doc, filter) {
     if (filter.timestampLt !== undefined && !(doc.timestamp < filter.timestampLt)) {
         return false;
     }
-    let contentLength = stringLengthInBytes(doc.content);
+    const contentLength = stringLengthInBytes(doc.content);
     if (filter.contentLength !== undefined && contentLength !== filter.contentLength) {
         return false;
     }
@@ -5597,8 +5748,16 @@ function docMatchesFilter(doc, filter) {
     }
     return true;
 }
+function docIsExpired(doc, now) {
+    const nowToUse = now || Date.now() * 1000;
+    if (doc.deleteAfter === null) {
+        return false;
+    }
+    return nowToUse > doc.deleteAfter;
+}
 export { cleanUpQuery as cleanUpQuery };
 export { docMatchesFilter as docMatchesFilter };
+export { docIsExpired as docIsExpired };
 new Logger("query helpers", "yellowBright");
 const escapeRegex = /[.*+?^${}()|[\]\\]/g;
 function escapeStringForRegex(s24) {
@@ -6023,7 +6182,8 @@ class Replica {
     replicaDriver;
     bus;
     _isClosed = false;
-    _ingestLock;
+    ingestLock;
+    eraseInterval;
     constructor(share, validator, driver){
         const addressIsValidResult = checkShareIsValid(share);
         if (isErr(addressIsValidResult)) {
@@ -6035,7 +6195,15 @@ class Replica {
         this.formatValidator = validator;
         this.replicaDriver = driver;
         this.bus = new Superbus("|");
-        this._ingestLock = new Lock();
+        this.ingestLock = new Lock();
+        this.eraseExpiredDocs();
+        this.eraseInterval = setInterval(()=>{
+            if (!this.isClosed()) {
+                this.eraseExpiredDocs();
+            } else {
+                clearInterval(this.eraseInterval);
+            }
+        });
     }
     isClosed() {
         return this._isClosed;
@@ -6052,6 +6220,7 @@ class Replica {
         logger6.debug("    sending didClose nonblockingly...");
         await this.bus.sendAndWait("didClose");
         logger6.debug("...closing done");
+        clearInterval(this.eraseInterval);
         return Promise.resolve();
     }
     async getConfig(key) {
@@ -6131,6 +6300,18 @@ class Replica {
         logger6.debug(`queryDocs`, query);
         if (this._isClosed) throw new ReplicaIsClosedError();
         return await this.replicaDriver.queryDocs(query);
+    }
+    async queryPaths(query) {
+        const docs = await this.queryDocs(query);
+        const pathsSet = new Set(docs.map(({ path  })=>path
+        ));
+        return Array.from(pathsSet).sort();
+    }
+    async queryAuthors(query) {
+        const docs = await this.queryDocs(query);
+        const authorsSet = new Set(docs.map(({ author  })=>author
+        ));
+        return Array.from(authorsSet).sort();
     }
     async set(keypair, docToSet) {
         loggerSet.debug(`set`, docToSet);
@@ -6259,7 +6440,7 @@ class Replica {
             };
         };
         loggerIngest.debug(" >> ingest: running protected region...");
-        let ingestEvent = await this._ingestLock.run(writeToDriverWithLock);
+        let ingestEvent = await this.ingestLock.run(writeToDriverWithLock);
         loggerIngest.debug(" >> ingest: ...done running protected region");
         loggerIngest.debug("...send ingest event after releasing the lock");
         loggerIngest.debug("...ingest event:", ingestEvent);
@@ -6307,6 +6488,12 @@ class Replica {
         }
         logger6.debug(`    ...done; ${numOverwritten} overwritten to be empty; ${numAlreadyEmpty} were already empty; out of total ${docsToOverwrite.length} docs`);
         return numOverwritten;
+    }
+    async eraseExpiredDocs() {
+        const erasedPath = await this.replicaDriver.eraseExpiredDocs();
+        for (const path of erasedPath){
+            await this.bus.sendAndWait(`expire`, path);
+        }
     }
 }
 export { Replica as Replica };
@@ -6630,6 +6817,10 @@ class ReplicaDriverMemory {
     docsByPathNewestFirst = new Map();
     constructor(share){
         logger8.debug("constructor");
+        const addressIsValidResult = checkShareIsValid(share);
+        if (isErr(addressIsValidResult)) {
+            throw addressIsValidResult;
+        }
         this.share = share;
     }
     isClosed() {
@@ -6766,6 +6957,21 @@ class ReplicaDriverMemory {
         docsByPath.sort(docComparePathASCthenNewestFirst);
         this.docsByPathNewestFirst.set(doc.path, docsByPath);
         return Promise.resolve(doc);
+    }
+    eraseExpiredDocs() {
+        const expiredDocs = [];
+        for (const [, doc] of this.docByPathAndAuthor){
+            if (docIsExpired(doc)) {
+                expiredDocs.push(doc);
+            }
+        }
+        const deletedPaths = new Set();
+        for (const expiredDoc of expiredDocs){
+            this.docsByPathNewestFirst.delete(expiredDoc.path);
+            this.docByPathAndAuthor.delete(combinePathAndAuthor(expiredDoc));
+            deletedPaths.add(expiredDoc.path);
+        }
+        return Promise.resolve(Array.from(deletedPaths));
     }
 }
 export { ReplicaDriverMemory as ReplicaDriverMemory };
